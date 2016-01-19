@@ -4,16 +4,16 @@
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>API Reference</title>
+    <title>Mifiel API Documentation</title>
 
     <link href="stylesheets/screen.css" rel="stylesheet" type="text/css" media="screen" />
     <link href="stylesheets/print.css" rel="stylesheet" type="text/css" media="print" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
       <script src="javascripts/all.js" type="text/javascript"></script>
 
       <script>
         $(function() {
-          setupLanguages(["shell","ruby","python"]);
+          setupLanguages(["shell","ruby"]);
         });
       </script>
   </head>
@@ -30,7 +30,6 @@
         <div class="lang-selector">
               <a href="#" data-language-name="shell">shell</a>
               <a href="#" data-language-name="ruby">ruby</a>
-              <a href="#" data-language-name="python">python</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -39,208 +38,777 @@
       <div id="toc">
       </div>
         <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
-            <li><a href='http://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
+            <li><a href='https://www.mifiel.com'>Mifiel Website</a></li>
+            <li><a href='https://github.com/Mifiel/api-doc'>See an error? Improve this doc</a></li>
         </ul>
     </div>
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id='introduction'>Introduction</h1>
-<p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
+        
+          <h1 id="introduction">Introduction</h1>
 
-<p>We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
+<p>Welcome to Mifiel API.</p>
 
-<p>This example API documentation page was created with <a href="http://github.com/tripit/slate">Slate</a>. Feel free to edit it and use it as a base for your own API&rsquo;s documentation.</p>
-<h1 id='authentication'>Authentication</h1>
-<blockquote>
-<p>To authorize, use this code:</p>
-</blockquote>
-<pre><code class="highlight ruby"><span class="nb">require</span> <span class="s1">'kittn'</span>
+<h3 id="overview">Overview</h3>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre>
-<pre><code class="highlight python"><span class="kn">import</span> <span class="nn">kittn</span>
+<p>Mifiel provides a simple ad robust REST-ful API to integrate document signatures in your existing applications and services.</p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre>
-<pre><code class="highlight shell"><span class="c"># With shell, you can just pass the correct header with each request</span>
-curl <span class="s2">"api_endpoint_here"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre>
+<p>The API enables document and certificate managment for your account.</p>
 
-<blockquote>
-<p>Make sure to replace <code class="prettyprint">meowmeowmeow</code> with your API key.</p>
-</blockquote>
+<h3 id="before-you-start">Before you start</h3>
 
-<p>Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our <a href="http://example.com/developers">developer portal</a>.</p>
+<p>To start using the API you will need an APP_ID and a APP_SECRET which will be provided upon request (contact us at hola@mifiel.com).</p>
 
-<p>Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
+<p>You will first need to create an account in <a href="https://www.mifiel.com">mifiel.com</a> since the APP_ID and APP_SECRET will be linked to your account. </p>
 
-<p><code class="prettyprint">Authorization: meowmeowmeow</code></p>
+<p>We have language bindings in Shell and Ruby! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
 
-<p><aside class="notice">
-You must replace <code class="prettyprint">meowmeowmeow</code> with your personal API key.
-</aside></p>
-<h1 id='kittens'>Kittens</h1><h2 id='get-all-kittens'>Get All Kittens</h2><pre><code class="highlight ruby"><span class="nb">require</span> <span class="s1">'kittn'</span>
+<h3 id="api-versions">API Versions</h3>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span>
-</code></pre>
-<pre><code class="highlight python"><span class="kn">import</span> <span class="nn">kittn</span>
+<p>All API calls are versioned, and the current Mifiel API is v1. We will never introduce any breaking changes within any version, but we may add new, non-breaking features from time to time.</p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</code></pre>
-<pre><code class="highlight shell">curl <span class="s2">"http://example.com/api/kittens"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre>
+<h2 id="error-handling">Error Handling</h2>
+
+<p>All errors follow the <a href="http://labs.omniti.com/labs/jsend">JSend</a> specification. Included in the body if any error response (<em>e.g. non-200 status code</em>) will be an error object in the form:</p>
+
+<h3 id="when-a-client-sends-an-unspected-request">When a client sends an unspected request</h3>
 
 <blockquote>
-<p>The above command returns JSON structured like this:</p>
+<p>Example JSON <strong>fail</strong> response:</p>
 </blockquote>
-<pre><code class="highlight json"><span class="p">[</span><span class="w">
+<pre class="highlight json"><code><span class="w">  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fail"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"Document#29f3cb01-744d-4eae-8718-213aec8a1678 not found"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>status</td>
+<td>String</td>
+<td><code class="prettyprint">fail</code></td>
+</tr>
+<tr>
+<td>errors</td>
+<td>Array</td>
+<td>Array of error messages</td>
+</tr>
+</tbody></table>
+
+<h3 id="for-server-errors">For server errors</h3>
+
+<blockquote>
+<p>Example JSON <strong>error</strong> response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="w">  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"error"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"500: Internal Server Error"</span><span class="w"> 
+  </span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>status</td>
+<td>String</td>
+<td><code class="prettyprint">error</code></td>
+</tr>
+<tr>
+<td>message</td>
+<td>String</td>
+<td>A descriptive message</td>
+</tr>
+</tbody></table>
+
+<h2 id="mifiel-supported-sdks">Mifiel supported SDKs</h2>
+
+<p>We currently suppport only Ruby but we&rsquo;re working to add more languages.</p>
+
+<h3 id="ruby">Ruby</h3>
+<pre class="highlight ruby"><code><span class="c1"># Configure Mifiel gem</span>
+<span class="no">Mifiel</span><span class="p">.</span><span class="nf">config</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">app_id</span> <span class="o">=</span> <span class="s1">'&lt;APP_ID&gt;'</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">app_secret</span> <span class="o">=</span> <span class="s1">'&lt;APP_SECRET&gt;'</span>
+<span class="k">end</span>
+</code></pre>
+
+<p>You can find the repo in <a href="https://github.com/Mifiel/ruby-api-client">github.com/Mifiel/ruby-api-client</a></p>
+
+<p>Add this line to your application&rsquo;s Gemfile:</p>
+
+<p><code class="prettyprint">gem &#39;mifiel&#39;</code></p>
+
+<p>And then execute:</p>
+
+<p><code class="prettyprint">$ bundle</code></p>
+
+<p>Or install it yourself as:</p>
+
+<p><code class="prettyprint">$ gem install mifiel</code></p>
+
+<h2 id="authentication">Authentication</h2>
+
+<p>Mifiel uses SHA1 HMAC encryption to authenticate API calls. Each request has to be authenticated by following these steps:</p>
+
+<ol>
+<li>A canonical string is first created using your HTTP headers containing the
+content-type, content-MD5, request URI and the timestamp. You can replace content-type and content-MD5 with a blank string if needed. The timestamp must be a valid HTTP date. The canonical string is computed as follows:</li>
+</ol>
+
+<p><code class="prettyprint">canonical_string = &#39;http method,content-type,content-MD5,request URI,timestamp&#39;</code></p>
+
+<ol>
+<li><p>This string is then used to create the signature which is a Base64 encoded
+SHA1 HMAC, using the APP_SECRET key.</p></li>
+<li><p>This signature is then added as the <code class="prettyprint">Authorization</code> HTTP header in the form:</p></li>
+</ol>
+
+<p><code class="prettyprint">Authorization: APIAuth APP-ID:signature-from-step-2</code></p>
+
+<h3 id="ruby-example">Ruby Example</h3>
+<pre class="highlight ruby"><code><span class="n">app_id</span> <span class="o">=</span> <span class="s1">'your app id'</span>
+<span class="n">app_secret</span> <span class="o">=</span> <span class="s1">'your app secret'</span>
+<span class="n">rest_request</span> <span class="o">=</span> <span class="no">RestClient</span><span class="o">::</span><span class="no">Request</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span>
+  <span class="ss">url: </span><span class="s1">'https://www.mifiel.com/api/v1/documents'</span><span class="p">,</span>
+  <span class="ss">method: :get</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="no">ApiAuth</span><span class="p">.</span><span class="nf">sign!</span><span class="p">(</span><span class="n">rest_request</span><span class="p">,</span> <span class="n">app_id</span><span class="p">,</span> <span class="n">app_secret</span><span class="p">).</span><span class="nf">execute</span>
+<span class="n">json_response</span> <span class="o">=</span> <span class="no">JSON</span><span class="p">.</span><span class="nf">load</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre>
+
+<p>If you are using Ruby, we recommend using our <a href="https://github.com/Mifiel/ruby-api-client">official gem</a>. </p>
+
+<p>If you want to do it yourself, you can use the <a href="https://github.com/mgomes/api_auth/">api-auth</a> gem which supports many popular HTTP clients. In this example we are using the <a href="https://github.com/rest-client/rest-client">RestClient</a> gem. </p>
+
+          <h1 id="objects">Objects</h1>
+
+<h2 id="document">Document</h2>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"29f3cb01-744d-4eae-8718-213aec8a1678"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"original_hash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"e1a580c27d22b432a8c6f4c57aec89dca46bb89b492d3bc537bf90282a6889da"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"signed_hash"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"blockchainized"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"btc_tx"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"btc_tx_link"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"file_file_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test-pdf.pdf"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"signed_by_all"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"signed"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"signed_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-01-19T16:34:37.921Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s2">"Firmado"</span><span class="p">],</span><span class="w">
+  </span><span class="nt">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"signer@email.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Signer 1"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"already_signed"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"signer@email.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Signer 1"</span><span class="w">
+  </span><span class="p">}],</span><span class="w">
+  </span><span class="nt">"has_not_signed"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="nt">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/documents/72b41ab9-3a11-458a-9cfa-03c8d8756986/file"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"file_download"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/documents/72b41ab9-3a11-458a-9cfa-03c8d8756986/file?download=true"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"file_signed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/documents/72b41ab9-3a11-458a-9cfa-03c8d8756986/file_signed"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"file_signed_download"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/documents/72b41ab9-3a11-458a-9cfa-03c8d8756986/file_signed?download=true"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"file_zipped"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/documents/72b41ab9-3a11-458a-9cfa-03c8d8756986/zip"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"signatures"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"signer@email.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"signed"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"signed_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-01-19T16:34:37.887Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"tax_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AAA010101AAA"</span><span class="w">
+  </span><span class="p">}]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>String</td>
+<td></td>
+</tr>
+<tr>
+<td>original_hash</td>
+<td>String</td>
+<td>Hash of the original (unsigned) document</td>
+</tr>
+<tr>
+<td>file_file_name</td>
+<td>String</td>
+<td>Name of the uploaded file</td>
+</tr>
+<tr>
+<td>name</td>
+<td>String</td>
+<td></td>
+</tr>
+<tr>
+<td>signed_by_all</td>
+<td>Boolean</td>
+<td><code class="prettyprint">true</code> if all signers have signed the document</td>
+</tr>
+<tr>
+<td>signed_at</td>
+<td>Date</td>
+<td>Timestamp of date signed (when all signatures have been collected)</td>
+</tr>
+<tr>
+<td>already_signed</td>
+<td>String[]</td>
+<td>People that have signed</td>
+</tr>
+<tr>
+<td>has_not_signed</td>
+<td>String[]</td>
+<td>People that have not signed</td>
+</tr>
+<tr>
+<td>status</td>
+<td>Array</td>
+<td>[code, code_message] <code class="prettyprint">0: not signed, 1: signed</code></td>
+</tr>
+<tr>
+<td>owner</td>
+<td>Object</td>
+<td>The owner of the document. The user who created the document.</td>
+</tr>
+<tr>
+<td>file</td>
+<td>String</td>
+<td>URL where the original document can be downloaded</td>
+</tr>
+<tr>
+<td>file_signed</td>
+<td>String</td>
+<td>URL where the signed file can be downloaded</td>
+</tr>
+<tr>
+<td>signatures</td>
+<td>Object[]</td>
+<td>Signatures on a signed document</td>
+</tr>
+</tbody></table>
+
+<h2 id="certificate">Certificate</h2>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"07320f00-f504-47e0-8ff6-78378d2faca4"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"type_of"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FIEL"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"cer_hex"</span><span class="p">:</span><span class="w"> </span><span class="s2">"308204cf30...1303030303030323"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"owner"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACCEM SERVICIOS EMPRESARIALES SC"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"tax_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AAA010101AAA"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"expires_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-04-28T19:43:23.000Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"expired"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>String</td>
+<td>The ID of the Certificate</td>
+</tr>
+<tr>
+<td>type_of</td>
+<td>String</td>
+<td>Type of certificate used: <code class="prettyprint">FIEL</code> or <code class="prettyprint">CSD</code></td>
+</tr>
+<tr>
+<td>owner</td>
+<td>String</td>
+<td>Name of the owner as defined in the certificate</td>
+</tr>
+<tr>
+<td>tax_id</td>
+<td>String</td>
+<td>RFC or identifier of owner as defined in the certificate</td>
+</tr>
+<tr>
+<td>cer_hex</td>
+<td>String</td>
+<td>Certificate in Hexadecimal</td>
+</tr>
+<tr>
+<td>expires_at</td>
+<td>Date</td>
+<td>Expiration date of the Certificate</td>
+</tr>
+<tr>
+<td>expired</td>
+<td>Boolean</td>
+<td>true` if the Certificate is expired</td>
+</tr>
+</tbody></table>
+
+          <h1 id="documents">Documents</h1>
+
+<h2 id="create-a-document">Create a Document</h2>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
+
+<span class="n">file_contents</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s1">'my-file.pdf'</span><span class="p">)</span>
+<span class="n">signers</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span> <span class="ss">name: </span><span class="s1">'Signer 1'</span><span class="p">,</span> <span class="ss">email: </span><span class="s1">'signer1@email.com'</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="ss">name: </span><span class="s1">'Signer 2'</span><span class="p">,</span> <span class="ss">email: </span><span class="s1">'signer2@email.com'</span> <span class="p">}</span>
+<span class="p">]</span>
+<span class="n">document</span> <span class="o">=</span> <span class="no">Mifiel</span><span class="o">::</span><span class="no">Document</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="n">file_contents</span><span class="p">,</span> <span class="n">signers</span><span class="p">)</span>
+</code></pre>
+<pre class="highlight shell"><code>curl -X POST https://www.mifiel.com/api/v1/documents <span class="se">\</span>
+  -F <span class="s2">"file=@my-file.pdf"</span> <span class="se">\</span>
+  -F <span class="s2">"signatories[0][name]=Signer 1"</span> <span class="se">\</span>
+  -F <span class="s2">"signatories[0][email]=signer@email.com"</span> <span class="se">\</span>
+  -H <span class="s2">"Authorization: APIAuth your-hmac-auth-header"</span>
+</code></pre>
+
+<p>Create a document to be signed by passing a File or a Hash of the file.</p>
+
+<p>Either the <em>&ldquo;File&rdquo;</em> or <em>&ldquo;Hash&rdquo;</em> must be passed.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">POST https://www.mifiel.com/api/v1/documents</code></p>
+
+<h3 id="parameters">Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>file</td>
+<td>File</td>
+<td><strong>Optional</strong> File to be signed (The hash will be automatically extracted from the file and signed)</td>
+</tr>
+<tr>
+<td>hash</td>
+<td>String</td>
+<td><strong>Optional</strong> Hash of the original, unsigned document (The hash will be signed)</td>
+</tr>
+<tr>
+<td>signatories</td>
+<td>Array</td>
+<td>A list containing the name and email of each signer</td>
+</tr>
+<tr>
+<td>callback_url</td>
+<td>String</td>
+<td><strong>Optional</strong> A Callback URL to post when the document gets signed</td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>Returns a <a href="#document">Document Model object</a></p>
+
+<h2 id="get-a-specific-document">Get a Specific Document</h2>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
+
+<span class="n">document</span> <span class="o">=</span> <span class="no">Mifiel</span><span class="o">::</span><span class="no">Document</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="s1">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">)</span>
+<span class="n">document</span><span class="p">.</span><span class="nf">original_hash</span>
+<span class="n">document</span><span class="p">.</span><span class="nf">file</span>
+<span class="n">document</span><span class="p">.</span><span class="nf">file_signed</span>
+<span class="n">document</span><span class="p">.</span><span class="nf">widget_id</span>
+<span class="c1"># ...</span>
+</code></pre>
+<pre class="highlight shell"><code>curl <span class="s2">"https://www.mfiel.com.mx/api/v1/documents/29f3cb01-744d-4eae-8718-213aec8a1678"</span>
+  -H <span class="s2">"Authorization: APIAuth your-hmac-auth-header"</span>
+</code></pre>
+
+<p>Retrieve a specific document.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET https://www.mifiel.com/api/v1/documents/:id</code></p>
+
+<h3 id="response">Response</h3>
+
+<p>Returns a <a href="#document">Document Model object</a></p>
+
+<h2 id="get-all-documents">Get All Documents</h2>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
+
+<span class="n">documents</span> <span class="o">=</span> <span class="no">Mifiel</span><span class="o">::</span><span class="no">Document</span><span class="p">.</span><span class="nf">all</span>
+</code></pre>
+<pre class="highlight shell"><code>curl <span class="s2">"https://www.mifiel.com/api/v1/documents"</span>
+  -H <span class="s2">"Authorization: APIAuth your-hmac-auth-header"</span>
+</code></pre>
+
+<p>Retrieve all documents in your account.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET https://www.mifiel.com/api/v1/documents</code></p>
+
+<h3 id="response">Response</h3>
+
+<p>Returns an Array of <a href="#document">Document Model object</a></p>
+
+<h2 id="delete-a-document">Delete a Document</h2>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
+
+<span class="no">Mifiel</span><span class="o">::</span><span class="no">Document</span><span class="p">.</span><span class="nf">delete</span><span class="p">(</span><span class="s1">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">)</span>
+</code></pre>
+<pre class="highlight shell"><code>curl -X DELETE <span class="s2">"https://www.mifiel.com/api/v1/documents/29f3cb01-744d-4eae-8718-213aec8a1678"</span>
+  -H <span class="s2">"Authorization: APIAuth your-hmac-auth-header"</span>
+</code></pre>
+
+<p>Deletes a document in your account.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">DELETE https://www.mifiel.com/api/v1/documents/:id</code></p>
+
+<h2 id="sign-a-document">Sign a Document</h2>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
+
+<span class="n">document</span> <span class="o">=</span> <span class="no">Mifiel</span><span class="o">::</span><span class="no">Document</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="s1">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">)</span>
+
+<span class="n">private_key</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s1">'FIEL_AAA010101AAA.key'</span><span class="p">)</span>
+<span class="n">private_key_pass</span> <span class="o">=</span> <span class="s1">'12345678a'</span>
+<span class="n">certificate_id</span> <span class="o">=</span> <span class="s1">'1d041a80-1d50-43ce-8534-64832de3be6b'</span>
+
+<span class="n">document</span><span class="p">.</span><span class="nf">build_signature</span><span class="p">(</span><span class="n">private_key</span><span class="p">,</span> <span class="n">private_key_pass</span><span class="p">)</span>
+<span class="n">document</span><span class="p">.</span><span class="nf">sign</span><span class="p">(</span><span class="ss">certificate_id: </span><span class="n">certificate_id</span><span class="p">)</span>
+<span class="c1"># Or</span>
+<span class="n">certificate</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s1">'FIEL_AAA010101AAA.cer'</span><span class="p">)</span>
+<span class="n">document</span><span class="p">.</span><span class="nf">sign</span><span class="p">(</span><span class="ss">certificate: </span><span class="n">certificate</span><span class="p">)</span>
+</code></pre>
+
+<p>Sign a document.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">POST https://www.mifiel.com/api/v1/documents/:id/sign</code></p>
+
+<aside class="info">
+  The documents get signed client side. The private key and password never reach our server.
+</aside>
+
+<h3 id="parameters">Parameters</h3>
+
+<p>Either <code class="prettyprint">key</code> or <code class="prettyprint">certificate</code> must be provided.</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>key</td>
+<td>String</td>
+<td><strong>Optional</strong> The ID of the key used to sign the document</td>
+</tr>
+<tr>
+<td>certificate</td>
+<td>String</td>
+<td><strong>Optional</strong> The signing certificate</td>
+</tr>
+<tr>
+<td>signature</td>
+<td>String</td>
+<td>The signature (generated using the key and the hash of the document)</td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>Returns a <a href="#document">Document Model object</a></p>
+
+<h2 id="request-signature">Request signature</h2>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
+
+<span class="n">document</span> <span class="o">=</span> <span class="no">Mifiel</span><span class="o">::</span><span class="no">Document</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="s1">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">)</span>
+<span class="n">email</span> <span class="o">=</span> <span class="s1">'signer@email.com'</span>
+<span class="n">cc</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'my@email.com'</span><span class="p">,</span> <span class="s1">'other@email.com'</span><span class="p">]</span>
+<span class="n">document</span><span class="p">.</span><span class="nf">request_signature</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="ss">cc: </span><span class="n">cc</span><span class="p">)</span>
+</code></pre>
+<pre class="highlight shell"><code>curl -X POST <span class="s2">"https://www.mifiel.com/api/v1/documents/29f3cb01-744d-4eae-8718-213aec8a1678/request_signature"</span> <span class="se">\</span>
+  -H <span class="s2">"Authorization: APIAuth your-hmac-auth-header"</span>
+</code></pre>
+
+<blockquote>
+<p>Which will respond with:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="w">  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Correo enviado"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"document"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"29f3cb01-744d-4eae-8718-213aec8a1678"</span><span class="w">        
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">POST https://www.mifiel.com/api/v1/documents/:id/request_signature</code></p>
+
+<h3 id="parameters">Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>email</td>
+<td>String</td>
+<td>Email of the person you want to sgn</td>
+</tr>
+<tr>
+<td>cc</td>
+<td>String</td>
+<td>Your email or any email that want to get a copy of the document when signed</td>
+</tr>
+</tbody></table>
+
+          <h1 id="certificates">Certificates</h1>
+
+<h2 id="create-a-certificate">Create a Certificate</h2>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
+
+<span class="n">file_contents</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s1">'my-certificate.cer'</span><span class="p">)</span>
+<span class="n">certificate</span> <span class="o">=</span> <span class="no">Mifiel</span><span class="o">::</span><span class="no">Certificate</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="n">file_contents</span><span class="p">)</span>
+</code></pre>
+<pre class="highlight shell"><code>curl -X POST https://www.mifiel.com/api/v1/keys <span class="se">\</span>
+  -F <span class="s2">"file=@my-certificate.cer"</span> <span class="se">\</span>
+  -H <span class="s2">"Authorization: APIAuth your-hmac-auth-header"</span>
+</code></pre>
+
+<p>Create a certificate in your account.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">POST https://www.mifiel.com/api/v1/keys</code></p>
+
+<h3 id="parameters">Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>file</td>
+<td>File</td>
+<td><code class="prettyprint">.cer</code> File of your FIEL</td>
+</tr>
+</tbody></table>
+
+<aside class="info">
+  You have to send us just the public certificate. We will never store the private key in our servers.
+</aside>
+
+<h3 id="response">Response</h3>
+
+<p>Returns a <a href="#certificate">Certificate Model object</a></p>
+
+<h2 id="get-a-specific-certificate">Get a Specific Certificate</h2>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
+
+<span class="n">certificate</span> <span class="o">=</span> <span class="no">Mifiel</span><span class="o">::</span><span class="no">Certificate</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="s1">'07320f00-f504-47e0-8ff6-78378d2faca4'</span><span class="p">)</span>
+<span class="n">certificate</span><span class="p">.</span><span class="nf">type_of</span>
+<span class="n">certificate</span><span class="p">.</span><span class="nf">owner</span>
+<span class="n">certificate</span><span class="p">.</span><span class="nf">tax_id</span>
+<span class="c1"># ...</span>
+</code></pre>
+<pre class="highlight shell"><code>curl <span class="s2">"https://www.mfiel.com.mx/api/v1/keys/07320f00-f504-47e0-8ff6-78378d2faca4"</span>
+  -H <span class="s2">"Authorization: APIAuth your-hmac-auth-header"</span>
+</code></pre>
+
+<p>Retrieve a specific certificate.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET https://www.mifiel.com/api/v1/keys/:id</code></p>
+
+<h3 id="response">Response</h3>
+
+<p>Returns a <a href="#certificate">Certificate Model object</a></p>
+
+<h2 id="get-all-certificates">Get All Certificates</h2>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
+
+<span class="n">certificates</span> <span class="o">=</span> <span class="no">Mifiel</span><span class="o">::</span><span class="no">Certificate</span><span class="p">.</span><span class="nf">all</span>
+</code></pre>
+<pre class="highlight shell"><code>curl <span class="s2">"https://www.mifiel.com/api/v1/keys"</span>
+  -H <span class="s2">"Authorization: APIAuth your-hmac-auth-header"</span>
+</code></pre>
+
+<p>Retrieve all certificates in your account.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET https://www.mifiel.com/api/v1/keys</code></p>
+
+<h3 id="response">Response</h3>
+
+<p>Returns an Array of <a href="#certificate">Certificate Model object</a></p>
+
+<h2 id="delete-a-certificate">Delete a Certificate</h2>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
+
+<span class="no">Mifiel</span><span class="o">::</span><span class="no">Certificate</span><span class="p">.</span><span class="nf">delete</span><span class="p">(</span><span class="s1">'07320f00-f504-47e0-8ff6-78378d2faca4'</span><span class="p">)</span>
+</code></pre>
+<pre class="highlight shell"><code>curl -X DELETE <span class="s2">"https://www.mifiel.com/api/v1/keys/07320f00-f504-47e0-8ff6-78378d2faca4"</span>
+  -H <span class="s2">"Authorization: APIAuth your-hmac-auth-header"</span>
+</code></pre>
+
+<p>Deletes a certificate in your account.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">DELETE https://www.mifiel.com/api/v1/keys/:id</code></p>
+
+<h2 id="sat-root-certificates">SAT Root Certificates</h2>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
+
+<span class="n">sat_certificates</span> <span class="o">=</span> <span class="no">Mifiel</span><span class="o">::</span><span class="no">Certificate</span><span class="p">.</span><span class="nf">sat</span>
+</code></pre>
+<pre class="highlight shell"><code>curl <span class="s2">"https://www.mifiel.com/api/v1/keys/sat"</span>
+</code></pre>
+
+<blockquote>
+<p>Example JSON response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
   </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fluffums"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"calico"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w">
+    </span><span class="nt">"cer_hex"</span><span class="p">:</span><span class="w"> </span><span class="s2">"505003081ac310b3...009060355040613024d583"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"expires_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-06-10T19:41:06.000Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"expired"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Isis"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+    </span><span class="nt">"cer_hex"</span><span class="p">:</span><span class="w"> </span><span class="s2">"302d060355040a0...653572766963696f20646520"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"expires_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-06-10T09:11:26.000Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"expired"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
 </span></code></pre>
 
-<p>This endpoint retrieves all kittens.</p>
-<h3 id='http-request'>HTTP Request</h3>
-<p><code class="prettyprint">GET http://example.com/kittens</code></p>
-<h3 id='query-parameters'>Query Parameters</h3>
+<p>Lists all public SAT Certificates used to generate FIELs</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET https://www.mifiel.com/api/v1/keys/:id</code></p>
+
+<h3 id="response-parameters">Response parameters</h3>
+
 <table><thead>
 <tr>
-<th>Parameter</th>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>cer_hex</td>
+<td>HEX</td>
+<td>SAT Root Certificate in hex form</td>
+</tr>
+<tr>
+<td>expires_at</td>
+<td>Date</td>
+<td>Expiration date of the certificate</td>
+</tr>
+<tr>
+<td>expired</td>
+<td>Boolean</td>
+<td><code class="prettyprint">true</code> if expires_at is less than today</td>
+</tr>
+</tbody></table>
+
+          <h1 id="widget">Widget</h1>
+
+<p>You can use the widget to allow your users to sign documents without the need to have an account in <a href="https://www.mifiel.com">mifiel.com</a></p>
+
+<p>To begin you have to copy and paste our snippet code (<em>in the right</em>) in the page that you want to display the widget in.</p>
+
+<p>You can also find the snippet code in <a href="https://www.mifiel.com/sign-snippet-v1.0.0.min.js">https://www.mifiel.com/sign-snippet-v1.0.0.min.js</a></p>
+
+<blockquote>
+<p>Copy this code and paste it at the end of the <code class="prettyprint">&lt;body&gt;</code>.</p>
+</blockquote>
+<pre class="highlight html"><code><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
+  <span class="nb">window</span><span class="p">.</span><span class="nx">mifiel</span><span class="o">=</span><span class="nb">window</span><span class="p">.</span><span class="nx">mifiel</span><span class="o">||</span><span class="p">[],</span><span class="kd">function</span><span class="p">(){</span><span class="s2">"use strict"</span><span class="p">;</span><span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">e</span><span class="o">=</span><span class="p">[</span><span class="s2">"widget"</span><span class="p">],</span><span class="nx">i</span><span class="o">=</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span><span class="k">return</span> <span class="kd">function</span><span class="p">(){</span><span class="nb">window</span><span class="p">.</span><span class="nx">mifiel</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="nx">e</span><span class="p">].</span><span class="nx">concat</span><span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span><span class="mi">0</span><span class="p">)))}},</span><span class="nx">t</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">t</span><span class="o">&lt;</span><span class="nx">e</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="nx">t</span><span class="o">++</span><span class="p">){</span><span class="kd">var</span> <span class="nx">n</span><span class="o">=</span><span class="nx">e</span><span class="p">[</span><span class="nx">t</span><span class="p">];</span><span class="nb">window</span><span class="p">.</span><span class="nx">mifiel</span><span class="p">[</span><span class="nx">n</span><span class="p">]</span><span class="o">||</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">mifiel</span><span class="p">[</span><span class="nx">n</span><span class="p">]</span><span class="o">=</span><span class="nx">i</span><span class="p">(</span><span class="nx">n</span><span class="p">))}</span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">"mifiel-js"</span><span class="p">)){</span><span class="kd">var</span> <span class="nx">r</span><span class="o">=</span><span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s2">"script"</span><span class="p">),</span><span class="nx">o</span><span class="o">=</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s2">"script"</span><span class="p">)[</span><span class="mi">0</span><span class="p">];</span><span class="nx">r</span><span class="p">.</span><span class="nx">type</span><span class="o">=</span><span class="s2">"text/javascript"</span><span class="p">,</span><span class="nx">r</span><span class="p">.</span><span class="nx">id</span><span class="o">=</span><span class="s2">"mifiel-js"</span><span class="p">,</span><span class="nx">r</span><span class="p">.</span><span class="nx">async</span><span class="o">=!</span><span class="mi">0</span><span class="p">,</span><span class="nx">r</span><span class="p">.</span><span class="nx">src</span><span class="o">=</span><span class="s2">"https://www.mifiel.com/sign-widget-v1.0.0.js"</span><span class="p">,</span><span class="nx">o</span><span class="p">.</span><span class="nx">parentNode</span><span class="p">.</span><span class="nx">insertBefore</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span><span class="nx">o</span><span class="p">)}}();</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre>
+
+<blockquote>
+<p>Then, append the widget to the page with:</p>
+</blockquote>
+<pre class="highlight html"><code><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
+  <span class="nb">window</span><span class="p">.</span><span class="nx">mifiel</span><span class="p">.</span><span class="nx">widget</span><span class="p">({</span>
+    <span class="na">widgetId</span><span class="p">:</span> <span class="s1">'c8aa73d1-db06-4d18-9f56-196b00f6eb69'</span><span class="p">,</span>
+    <span class="na">appendTo</span><span class="p">:</span> <span class="s1">'id-of-the-element-to-append'</span>
+  <span class="p">});</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre>
+
+<h3 id="options">Options</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
 <th>Default</th>
 <th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>include_cats</td>
-<td>false</td>
-<td>If set to true, the result will also include cats.</td>
+<td>widgetId</td>
+<td>String</td>
+<td></td>
+<td>Widget ID. You can get it with <code class="prettyprint">document.widget_id</code> in Ruby</td>
 </tr>
 <tr>
-<td>available</td>
-<td>true</td>
-<td>If set to false, the result will include kittens that have already been adopted.</td>
-</tr>
-</tbody></table>
-
-<p><aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside></p>
-<h2 id='get-a-specific-kitten'>Get a Specific Kitten</h2><pre><code class="highlight ruby"><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre>
-<pre><code class="highlight python"><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre>
-<pre><code class="highlight shell">curl <span class="s2">"http://example.com/api/kittens/3"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre>
-
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
-<pre><code class="highlight json"><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Isis"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-
-<p>This endpoint retrieves a specific kitten.</p>
-
-<p><aside class="warning">If you&rsquo;re not using an administrator API key, note that some kittens will return 403 Forbidden if they are hidden for admins only.</aside></p>
-<h3 id='http-request'>HTTP Request</h3>
-<p><code class="prettyprint">GET http://example.com/kittens/&lt;ID&gt;</code></p>
-<h3 id='url-parameters'>URL Parameters</h3>
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>ID</td>
-<td>The ID of the cat to retrieve</td>
-</tr>
-</tbody></table>
-
-          <h1 id='errors'>Errors</h1>
-<p><aside class="notice">This error section is stored in a separate file in <code class="prettyprint">includes/_errors.md</code>. Slate allows you to optionally separate out your docs into many files&hellip;just save them to the <code class="prettyprint">includes</code> folder and add them to the top of your <code class="prettyprint">index.md</code>&rsquo;s frontmatter. Files are included in the order listed.</aside></p>
-
-<p>The Kittn API uses the following error codes:</p>
-
-<table><thead>
-<tr>
-<th>Error Code</th>
-<th>Meaning</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>400</td>
-<td>Bad Request &ndash; Your request sucks</td>
+<td>appendTo</td>
+<td>String</td>
+<td>body</td>
+<td>ID of the element in the page</td>
 </tr>
 <tr>
-<td>401</td>
-<td>Unauthorized &ndash; Your API key is wrong</td>
+<td>width</td>
+<td>String</td>
+<td>100%</td>
+<td><strong>Optional</strong> With of the widget</td>
 </tr>
 <tr>
-<td>403</td>
-<td>Forbidden &ndash; The kitten requested is hidden for administrators only</td>
-</tr>
-<tr>
-<td>404</td>
-<td>Not Found &ndash; The specified kitten could not be found</td>
-</tr>
-<tr>
-<td>405</td>
-<td>Method Not Allowed &ndash; You tried to access a kitten with an invalid method</td>
-</tr>
-<tr>
-<td>406</td>
-<td>Not Acceptable &ndash; You requested a format that isn&rsquo;t json</td>
-</tr>
-<tr>
-<td>410</td>
-<td>Gone &ndash; The kitten requested has been removed from our servers</td>
-</tr>
-<tr>
-<td>418</td>
-<td>I&rsquo;m a teapot</td>
-</tr>
-<tr>
-<td>429</td>
-<td>Too Many Requests &ndash; You&rsquo;re requesting too many kittens! Slown down!</td>
-</tr>
-<tr>
-<td>500</td>
-<td>Internal Server Error &ndash; We had a problem with our server. Try again later.</td>
-</tr>
-<tr>
-<td>503</td>
-<td>Service Unavailable &ndash; We&rsquo;re temporarially offline for maintanance. Please try again later.</td>
+<td>height</td>
+<td>String</td>
+<td>1100</td>
+<td><strong>Optional</strong> Height of the widget</td>
 </tr>
 </tbody></table>
 
@@ -249,7 +817,6 @@ Remember — a happy kitten is an authenticated kitten!
           <div class="lang-selector">
                 <a href="#" data-language-name="shell">shell</a>
                 <a href="#" data-language-name="ruby">ruby</a>
-                <a href="#" data-language-name="python">python</a>
           </div>
       </div>
     </div>
