@@ -126,131 +126,13 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
 
 <p>If you want to create your own, you can use the <a href="https://github.com/mgomes/api_auth/">api-auth</a> gem which supports many popular HTTP clients. In this example we are using the <a href="https://github.com/rest-client/rest-client">RestClient</a> gem. </p>
 
-          <h1 id="errors">Errors</h1>
-
-<h2 id="error-codes">Error codes</h2>
-
-<p>Mifiel API uses the following error codes:</p>
-
-<table><thead>
-<tr>
-<th>Error Code</th>
-<th>Meaning</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>400</td>
-<td>Bad Request &ndash; Your request had an error. (more info in the <code class="prettyprint">errors</code> response param)</td>
-</tr>
-<tr>
-<td>401</td>
-<td>Unauthorized &ndash; Your authorization header is wrong.</td>
-</tr>
-<tr>
-<td>402</td>
-<td>Payment Required &ndash; Your request needs a paid plan or your paid plan has expired.</td>
-</tr>
-<tr>
-<td>404</td>
-<td>Not Found &ndash; The specified object could not be found.</td>
-</tr>
-<tr>
-<td>405</td>
-<td>Method Not Allowed &ndash; You tried to access an invalid method.</td>
-</tr>
-<tr>
-<td>406</td>
-<td>Not Acceptable &ndash; You requested a format that isn&rsquo;t supported.</td>
-</tr>
-<tr>
-<td>410</td>
-<td>Gone &ndash; The requested object has been removed from our servers.</td>
-</tr>
-<tr>
-<td>422</td>
-<td>Unprocessable Entity &ndash; Something happend when we tried to save your request.</td>
-</tr>
-<tr>
-<td>429</td>
-<td>Too Many Requests &ndash; You&rsquo;re requesting too many kittens! Slow down!</td>
-</tr>
-<tr>
-<td>500</td>
-<td>Internal Server Error &ndash; We had a problem in our servers. Try again later.</td>
-</tr>
-<tr>
-<td>503</td>
-<td>Service Unavailable &ndash; We&rsquo;re temporarially offline for maintanance. Please try again later.</td>
-</tr>
-</tbody></table>
-
-<h2 id="error-handling">Error Handling</h2>
-
-<p>All errors follow the <a href="http://labs.omniti.com/labs/jsend">JSend</a> specification. Following are examples of error objects found in the body of error responses (<em>e.g. non-200 status code</em>).</p>
-
-<h3 id="when-a-client-sends-an-unexpected-request">When a client sends an unexpected request:</h3>
-
-<blockquote>
-<p>JSON Example <strong>fail</strong> response:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="w">  </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fail"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-      </span><span class="s2">"Document#29f3cb01-744d-4eae-8718-213aec8a1678 not found"</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span></code></pre>
-
-<table><thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>status</td>
-<td>String</td>
-<td><code class="prettyprint">fail</code></td>
-</tr>
-<tr>
-<td>errors</td>
-<td>Array</td>
-<td>Array of error messages</td>
-</tr>
-</tbody></table>
-
-<h3 id="for-server-errors">For server errors:</h3>
-
-<blockquote>
-<p>JSON Example <strong>error</strong> response:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="w">  </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"error"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"500: Internal Server Error"</span><span class="w"> 
-  </span><span class="p">}</span><span class="w">
-</span></code></pre>
-
-<table><thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>status</td>
-<td>String</td>
-<td><code class="prettyprint">error</code></td>
-</tr>
-<tr>
-<td>message</td>
-<td>String</td>
-<td>A descriptive message</td>
-</tr>
-</tbody></table>
-
           <h1 id="objects">Objects</h1>
+
+<p>Mifiel data is structured around 3 main types of objects: Document, Certificate and Signature. You’ll find these objects in the format described below.</p>
+
+<aside class="info">
+  The <b>Date</b> type is always in <b>Coordinated Universal Time (UTC)</b>.
+</aside>
 
 <h2 id="document">Document</h2>
 
@@ -975,6 +857,130 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
 <li><p>If successful, the signer will be presented with a page explaining that the signing was successful and that they will receive an email with the signed document. We will also display a confirmation button (e.g. &lsquo;Proceed to next step&rsquo;) which will return the user to the flow of your website.</p></li>
 <li><p>Mifiel will then post the following information to the webhook specified by you (in Step 1): electronic signature of the document, timestamp of signature, the signature page, and information regarding the public certificate(s) used to sign the document.</p></li>
 </ol>
+
+          <h1 id="errors">Errors</h1>
+
+<h2 id="error-codes">Error codes</h2>
+
+<p>Mifiel API uses the following error codes:</p>
+
+<table><thead>
+<tr>
+<th>Error Code</th>
+<th>Meaning</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>Bad Request &ndash; Your request had an error. (more info in the <code class="prettyprint">errors</code> response param)</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized &ndash; Your authorization header is wrong.</td>
+</tr>
+<tr>
+<td>402</td>
+<td>Payment Required &ndash; Your request requires a paid plan. If you already have a plan, it may have expired.</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not Found &ndash; The specified object could not be found.</td>
+</tr>
+<tr>
+<td>405</td>
+<td>Method Not Allowed &ndash; You tried to access an invalid method.</td>
+</tr>
+<tr>
+<td>406</td>
+<td>Not Acceptable &ndash; You requested a format that isn&rsquo;t supported.</td>
+</tr>
+<tr>
+<td>410</td>
+<td>Gone &ndash; The requested object has been removed from our servers.</td>
+</tr>
+<tr>
+<td>422</td>
+<td>Unprocessable Entity &ndash; Something happened when we tried to save your request.</td>
+</tr>
+<tr>
+<td>429</td>
+<td>Too Many Requests &ndash; You&rsquo;re making too many requests! Slow down!</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal Server Error &ndash; We had a problem in our servers. Please try again later.</td>
+</tr>
+<tr>
+<td>503</td>
+<td>Service Unavailable &ndash; We&rsquo;re temporarily offline for maintenance. Please try again later.</td>
+</tr>
+</tbody></table>
+
+<h2 id="error-handling">Error Handling</h2>
+
+<p>All errors follow the <a href="http://labs.omniti.com/labs/jsend">JSend</a> specification. Following are examples of error objects found in the body of error responses (<em>e.g. non-200 status code</em>).</p>
+
+<h3 id="when-a-client-sends-an-unexpected-request">When a client sends an unexpected request:</h3>
+
+<blockquote>
+<p>JSON Example <strong>fail</strong> response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="w">  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fail"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"Document#29f3cb01-744d-4eae-8718-213aec8a1678 not found"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>status</td>
+<td>String</td>
+<td><code class="prettyprint">fail</code></td>
+</tr>
+<tr>
+<td>errors</td>
+<td>Array</td>
+<td>Array of error messages</td>
+</tr>
+</tbody></table>
+
+<h3 id="for-server-errors">For server errors:</h3>
+
+<blockquote>
+<p>JSON Example <strong>error</strong> response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="w">  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"error"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"500: Internal Server Error"</span><span class="w"> 
+  </span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>status</td>
+<td>String</td>
+<td><code class="prettyprint">error</code></td>
+</tr>
+<tr>
+<td>message</td>
+<td>String</td>
+<td>A descriptive message</td>
+</tr>
+</tbody></table>
 
       </div>
       <div class="dark-box">
