@@ -870,11 +870,11 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
 <p>Following is a more detailed explanation of the steps involved in requesting and executing signatures within the embedded signing widget.</p>
 
 <ol>
-<li><p>First, you must pass the <strong>PDF file</strong> that is being signed (converted into a String), along with the following <strong>parameters</strong>: Webhook, email of each signer, and name of each signer (optional).</p></li>
-<li><p>Mifiel will return a <strong>document ID</strong>, which you will then need to pass to the widget (running on your website&rsquo;s front-end).</p></li>
+<li><p>The first step is to create a Document in your backend with the <em>API_ID</em> and <em>APP_SECRET</em>. You must pass the <strong>PDF file</strong> that is being signed (or a SHA256 encoded hash of the PDF), along with the following <strong>parameters</strong>: webhook (callback_url) and the email and name (optional) of each signer.</p></li>
+<li><p>Mifiel will return a <strong>Widget ID</strong> in the response, which you will then need to pass to the widget (running on your website&rsquo;s front-end).</p></li>
 <li><p>The signature process then takes place within your website. The signer will be able to preview the document, select the files of their FIEL, and enter the password of their FIEL to sign (during this process Mifiel will be verifying that the FIEL is valid and not expired). </p></li>
 <li><p>If successful, the signer will be presented with a page explaining that the signing was successful and that they will receive an email with the signed document. We will also display a confirmation button (e.g. &lsquo;Proceed to next step&rsquo;) which will return the user to the flow of your website.</p></li>
-<li><p>Mifiel will then post the following information to the webhook specified by you (in Step 1): electronic signature of the document, timestamp of signature, the signature page, and information regarding the public certificate(s) used to sign the document.</p></li>
+<li><p>Mifiel will then <code class="prettyprint">POST</code> the document information to the webhook specified by you (in Step 1): electronic signature of the document, timestamp of signature, the signature page, and information regarding the public certificate(s) used to sign the document.</p></li>
 </ol>
 
           <h1 id="errors">Errors</h1>
