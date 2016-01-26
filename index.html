@@ -378,8 +378,16 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
   <span class="ss">file: </span><span class="s1">'path/to/my-file.pdf'</span><span class="p">,</span>
   <span class="ss">original_hash: </span><span class="s1">'a341aa7f349e39a...67f59bd9cbcf0d'</span><span class="p">,</span>
   <span class="ss">signatories: </span><span class="p">[</span>
-    <span class="p">{</span> <span class="ss">name: </span><span class="s1">'Signer 1'</span><span class="p">,</span> <span class="ss">email: </span><span class="s1">'signer1@email.com'</span><span class="p">,</span> <span class="ss">tax_id: </span><span class="s1">'AAA010101AAA'</span> <span class="p">},</span>
-    <span class="p">{</span> <span class="ss">name: </span><span class="s1">'Signer 2'</span><span class="p">,</span> <span class="ss">email: </span><span class="s1">'signer2@email.com'</span><span class="p">,</span> <span class="ss">tax_id: </span><span class="s1">'AAA010102AAA'</span> <span class="p">}</span>
+    <span class="p">{</span> 
+      <span class="ss">name: </span><span class="s1">'Signer 1'</span><span class="p">,</span> 
+      <span class="ss">email: </span><span class="s1">'signer1@email.com'</span><span class="p">,</span> 
+      <span class="ss">tax_id: </span><span class="s1">'AAA010101AAA'</span> 
+    <span class="p">},</span> 
+    <span class="p">{</span> 
+      <span class="ss">name: </span><span class="s1">'Signer 2'</span><span class="p">,</span> 
+      <span class="ss">email: </span><span class="s1">'signer2@email.com'</span><span class="p">,</span> 
+      <span class="ss">tax_id: </span><span class="s1">'AAA010102AAA'</span> 
+    <span class="p">}</span>
   <span class="p">],</span>
   <span class="ss">callback_url: </span><span class="s1">'https://www.example.com/webhook/url'</span>
 <span class="p">)</span>
