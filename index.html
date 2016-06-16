@@ -91,7 +91,7 @@
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;shell&quot;,&quot;php&quot;,&quot;ruby&quot;]">
+  <body class="index" data-languages="[&quot;shell&quot;,&quot;php&quot;,&quot;ruby&quot;,&quot;python&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -104,6 +104,7 @@
               <a href="#" data-language-name="shell">cURL</a>
               <a href="#" data-language-name="php">PHP</a>
               <a href="#" data-language-name="ruby">Ruby</a>
+              <a href="#" data-language-name="python">Python</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -139,9 +140,19 @@
 
 <p>All API calls are versioned, and the current Mifiel API is v1.0. We will never introduce any breaking changes within any version, but may add new, non-breaking features and enhancements from time to time.</p>
 
+<h3 id="sandbox-enviroment">Sandbox enviroment</h3>
+
+<p>Mifiel provides a sandbox environment where you can tests. Documents created in the sandbox mode are free of charge.</p>
+
+<p>For sandbox tests, just change the www.mifiel.com for sandbox.mifiel.com in every endpoint that you use.</p>
+
+<aside class="warning">
+  Documents signed in the Sandobox environment are legally invalid and should not be used for legal purposes.
+</aside>
+
 <h2 id="mifiel-supported-sdks">Mifiel-supported SDKs</h2>
 
-<p>We currently suppport only Ruby and PHP but are working on adding more languages.</p>
+<p>We currently suppport <strong>Ruby</strong>, <strong>PHP</strong> and <strong>Python</strong> but are working on adding more languages.</p>
 
 <h3 id="ruby">Ruby</h3>
 <pre class="highlight ruby"><code><span class="c1"># Configure Mifiel gem</span>
@@ -187,6 +198,25 @@
 <p>Now your composer.json has been updated automatically and you&rsquo;re able to require the just created <em>vendor/autoload.php</em> file to PSR-4 autoload the library.</p>
 
 <p>You can find the repo at <a href="https://github.com/Mifiel/php-api-client">github.com/Mifiel/ruby-api-client</a>.</p>
+
+<h3 id="python">Python</h3>
+<pre class="highlight python"><code><span class="c"># Import the Client </span>
+<span class="kn">from</span> <span class="nn">mifiel</span> <span class="kn">import</span> <span class="n">Client</span>
+
+<span class="c"># Configure Mifiel Library, you will </span>
+<span class="c"># pass this to every call you make to our servers.</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="s">'APP_ID'</span><span class="p">,</span> <span class="n">secret_key</span><span class="o">=</span><span class="s">'APP_SECRET'</span><span class="p">)</span>
+<span class="c"># If you want to make tests without beeing charged</span>
+<span class="c"># you can use our sandbox enviroment with:</span>
+<span class="n">client</span><span class="o">.</span><span class="n">use_sandbox</span>
+</code></pre>
+
+<p>The best way to install Mifiel lib is with <a href="https://pypi.python.org/pypi">PIP</a>.
+To install the most recent version please run the following command.</p>
+
+<p><code class="prettyprint">pip install mifiel</code></p>
+
+<p>You can find the repo at <a href="https://github.com/Mifiel/python-api-client/">github.com/Mifiel/python-api-client</a></p>
 
 <h2 id="authentication">Authentication</h2>
 
@@ -530,6 +560,42 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
 <span class="nv">$document</span><span class="o">-&gt;</span><span class="na">save</span><span class="p">();</span>
 <span class="cp">?&gt;</span>
 </code></pre>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">mifiel</span> <span class="kn">import</span> <span class="n">Document</span><span class="p">,</span> <span class="n">Client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="s">'APP_ID'</span><span class="p">,</span> <span class="n">secret_key</span><span class="o">=</span><span class="s">'APP_SECRET'</span><span class="p">)</span>
+
+<span class="n">signatories</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span> 
+    <span class="s">'name'</span><span class="p">:</span> <span class="s">'Signer 1'</span><span class="p">,</span> 
+    <span class="s">'email'</span><span class="p">:</span> <span class="s">'signer1@email.com'</span><span class="p">,</span> 
+    <span class="s">'tax_id'</span><span class="p">:</span> <span class="s">'AAA010101AAA'</span> 
+  <span class="p">},</span>
+  <span class="p">{</span> 
+    <span class="s">'name'</span><span class="p">:</span> <span class="s">'Signer 2'</span><span class="p">,</span> 
+    <span class="s">'email'</span><span class="p">:</span> 
+    <span class="s">'signer2@email.com'</span><span class="p">,</span> 
+    <span class="s">'tax_id'</span><span class="p">:</span> <span class="s">'AAA010102AAA'</span>
+  <span class="p">}</span>
+<span class="p">]</span>
+<span class="c"># Providde the SHA256 hash of the file you want to sign.</span>
+<span class="n">document</span> <span class="o">=</span> <span class="n">Document</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+  <span class="n">client</span><span class="o">=</span><span class="n">client</span><span class="p">,</span> 
+  <span class="n">signatories</span><span class="o">=</span><span class="n">signatories</span><span class="p">,</span> 
+  <span class="n">dhash</span><span class="o">=</span><span class="s">'some-sha256-hash'</span>
+<span class="p">)</span>
+<span class="c"># Or just send the file and we'll take care of everything.</span>
+<span class="c"># We will store the file for you. </span>
+<span class="n">document</span> <span class="o">=</span> <span class="n">Document</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+  <span class="n">client</span><span class="o">=</span><span class="n">client</span><span class="p">,</span> 
+  <span class="n">signatories</span><span class="o">=</span><span class="n">signatories</span><span class="p">,</span> 
+  <span class="nb">file</span><span class="o">=</span><span class="s">'test/fixtures/example.pdf'</span>
+<span class="p">)</span>
+
+<span class="n">document</span><span class="o">.</span><span class="nb">id</span> <span class="c"># -&gt; '7500e528-ac6f-4ad3-9afd-74487c11576a'</span>
+<span class="n">document</span><span class="o">.</span><span class="n">original_hash</span>
+<span class="n">document</span><span class="o">.</span><span class="nb">file</span>
+<span class="n">document</span><span class="o">.</span><span class="n">file_signed</span>
+<span class="c"># ...</span>
+</code></pre>
 
 <p>Create a document to be signed by passing either a PDF file or the Hash of the file.</p>
 
@@ -605,6 +671,15 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
 <span class="c1"># ...
 </span><span class="cp">?&gt;</span>
 </code></pre>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">mifiel</span> <span class="kn">import</span> <span class="n">Document</span><span class="p">,</span> <span class="n">Client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="s">'APP_ID'</span><span class="p">,</span> <span class="n">secret_key</span><span class="o">=</span><span class="s">'APP_SECRET'</span><span class="p">)</span>
+
+<span class="n">document</span> <span class="o">=</span> <span class="n">Document</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s">'id'</span><span class="p">)</span>
+<span class="n">document</span><span class="o">.</span><span class="n">original_hash</span>
+<span class="n">document</span><span class="o">.</span><span class="nb">file</span>
+<span class="n">document</span><span class="o">.</span><span class="n">file_signed</span>
+<span class="c"># ...</span>
+</code></pre>
 
 <p>Allows you to retrieve a specific document.</p>
 
@@ -630,6 +705,11 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
 
 <span class="nv">$documents</span> <span class="o">=</span> <span class="nx">Document</span><span class="o">::</span><span class="na">all</span><span class="p">();</span>
 <span class="cp">?&gt;</span>
+</code></pre>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">mifiel</span> <span class="kn">import</span> <span class="n">Document</span><span class="p">,</span> <span class="n">Client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="s">'APP_ID'</span><span class="p">,</span> <span class="n">secret_key</span><span class="o">=</span><span class="s">'APP_SECRET'</span><span class="p">)</span>
+
+<span class="n">documents</span> <span class="o">=</span> <span class="n">Document</span><span class="o">.</span><span class="nb">all</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
 </code></pre>
 
 <p>Allows you to retrieve all documents in your account.</p>
@@ -657,70 +737,17 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
 <span class="nx">Document</span><span class="o">::</span><span class="na">delete</span><span class="p">(</span><span class="s1">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">);</span>
 <span class="cp">?&gt;</span>
 </code></pre>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">mifiel</span> <span class="kn">import</span> <span class="n">Document</span><span class="p">,</span> <span class="n">Client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="s">'APP_ID'</span><span class="p">,</span> <span class="n">secret_key</span><span class="o">=</span><span class="s">'APP_SECRET'</span><span class="p">)</span>
+
+<span class="n">Document</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">)</span>
+</code></pre>
 
 <p>Allows you to delete a specific document in your account.</p>
 
 <h3 id="http-request">HTTP Request</h3>
 
 <p><code class="prettyprint">DELETE https://www.mifiel.com/api/v1/documents/:id</code></p>
-
-<h2 id="sign-a-document">Sign a Document</h2>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
-
-<span class="n">document</span> <span class="o">=</span> <span class="no">Mifiel</span><span class="o">::</span><span class="no">Document</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="s1">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">)</span>
-
-<span class="n">private_key</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s1">'FIEL_AAA010101AAA.key'</span><span class="p">)</span>
-<span class="n">private_key_pass</span> <span class="o">=</span> <span class="s1">'12345678a'</span>
-<span class="n">certificate_id</span> <span class="o">=</span> <span class="s1">'1d041a80-1d50-43ce-8534-64832de3be6b'</span>
-
-<span class="n">document</span><span class="p">.</span><span class="nf">build_signature</span><span class="p">(</span><span class="n">private_key</span><span class="p">,</span> <span class="n">private_key_pass</span><span class="p">)</span>
-<span class="n">document</span><span class="p">.</span><span class="nf">sign</span><span class="p">(</span><span class="ss">certificate_id: </span><span class="n">certificate_id</span><span class="p">)</span>
-<span class="c1"># Or</span>
-<span class="n">certificate</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s1">'FIEL_AAA010101AAA.cer'</span><span class="p">)</span>
-<span class="n">document</span><span class="p">.</span><span class="nf">sign</span><span class="p">(</span><span class="ss">certificate: </span><span class="n">certificate</span><span class="p">)</span>
-</code></pre>
-
-<p>Allows the specified document to be signed.</p>
-
-<p>The documents get signed client-side. For security purposes, the private key and password of the signer never reach our server.</p>
-
-<h3 id="http-request">HTTP Request</h3>
-
-<p><code class="prettyprint">POST https://www.mifiel.com/api/v1/documents/:id/sign</code></p>
-
-<h3 id="parameters">Parameters</h3>
-
-<table><thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>certificate_id</td>
-<td>String</td>
-<td><strong>Optional</strong> The ID of the certificate that corresponds to the private key being used to sign</td>
-</tr>
-<tr>
-<td>certificate</td>
-<td>String</td>
-<td><strong>Optional</strong> The certificate (.cer file) corresponding to the private key being used to sign</td>
-</tr>
-<tr>
-<td>signature</td>
-<td>String</td>
-<td>The electronic signature on the successfully-signed document</td>
-</tr>
-</tbody></table>
-
-<aside class="info">
-  Either the <b>certificate_id</b> or <b>certificate</b> must be provided.
-</aside>
-
-<h3 id="response">Response</h3>
-
-<p>Returns a <a href="#document">Document Model</a></p>
 
 <h2 id="request-signature">Request signature</h2>
 
@@ -734,6 +761,14 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
 </code></pre>
 <pre class="highlight shell"><code>curl -X POST <span class="s2">"https://www.mifiel.com/api/v1/documents/29f3cb01-744d-4eae-8718-213aec8a1678/request_signature"</span> <span class="se">\</span>
   -H <span class="s2">"Authorization: APIAuth APP-ID:hmac-signature"</span>
+</code></pre>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">mifiel</span> <span class="kn">import</span> <span class="n">Document</span><span class="p">,</span> <span class="n">Client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="s">'APP_ID'</span><span class="p">,</span> <span class="n">secret_key</span><span class="o">=</span><span class="s">'APP_SECRET'</span><span class="p">)</span>
+
+<span class="n">email</span> <span class="o">=</span> <span class="s">'signer@email.com'</span>
+<span class="n">cc</span> <span class="o">=</span> <span class="p">[</span><span class="s">'signer@email.com'</span><span class="p">,</span> <span class="s">'viewer@email.com'</span><span class="p">]</span>
+<span class="n">document</span> <span class="o">=</span> <span class="n">Document</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">)</span>
+<span class="n">document</span><span class="o">.</span><span class="n">request_signature</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">cc</span><span class="o">=</span><span class="n">cc</span><span class="p">)</span>
 </code></pre>
 
 <blockquote>
@@ -912,70 +947,6 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
 <h3 id="http-request">HTTP Request</h3>
 
 <p><code class="prettyprint">DELETE https://www.mifiel.com/api/v1/keys/:id</code></p>
-
-<h2 id="sat-root-certificates">SAT Root Certificates</h2>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
-
-<span class="n">sat_certificates</span> <span class="o">=</span> <span class="no">Mifiel</span><span class="o">::</span><span class="no">Certificate</span><span class="p">.</span><span class="nf">sat</span>
-</code></pre>
-<pre class="highlight shell"><code>curl <span class="s2">"https://www.mifiel.com/api/v1/keys/sat"</span>
-</code></pre>
-<pre class="highlight php"><code><span class="cp">&lt;?php</span>
-<span class="k">require</span> <span class="s1">'vendor/autoload.php'</span><span class="p">;</span>
-<span class="k">use</span> <span class="nx">Mifiel\Certificate</span><span class="p">;</span>
-
-<span class="nv">$sat_certificates</span> <span class="o">=</span> <span class="nx">Certificate</span><span class="o">::</span><span class="na">sat</span><span class="p">();</span>
-<span class="cp">?&gt;</span>
-</code></pre>
-
-<blockquote>
-<p>JSON Example response:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"cer_hex"</span><span class="p">:</span><span class="w"> </span><span class="s2">"505003081ac310b3...009060355040613024d583"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"expires_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-06-10T19:41:06.000Z"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"expired"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"cer_hex"</span><span class="p">:</span><span class="w"> </span><span class="s2">"302d060355040a0...653572766963696f20646520"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"expires_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-06-10T09:11:26.000Z"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"expired"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span><span class="w">
-</span></code></pre>
-
-<p>Lists all of the public SAT Certificates used to generate all FIELs</p>
-
-<h3 id="http-request">HTTP Request</h3>
-
-<p><code class="prettyprint">GET https://www.mifiel.com/api/v1/keys/:id</code></p>
-
-<h3 id="response-parameters">Response parameters</h3>
-
-<table><thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>cer_hex</td>
-<td>HEX</td>
-<td>SAT Root Certificate in hex form</td>
-</tr>
-<tr>
-<td>expires_at</td>
-<td>Date</td>
-<td>Expiration date of the certificate</td>
-</tr>
-<tr>
-<td>expired</td>
-<td>Boolean</td>
-<td><code class="prettyprint">true</code> if expires_at is prior to today</td>
-</tr>
-</tbody></table>
 
           <h1 id="embedded-signing">Embedded Signing</h1>
 
@@ -1220,6 +1191,7 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
                 <a href="#" data-language-name="shell">cURL</a>
                 <a href="#" data-language-name="php">PHP</a>
                 <a href="#" data-language-name="ruby">Ruby</a>
+                <a href="#" data-language-name="python">Python</a>
           </div>
       </div>
     </div>
