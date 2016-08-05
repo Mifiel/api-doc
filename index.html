@@ -500,7 +500,7 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
 <h2 id="create-a-document">Create a Document</h2>
 
 <blockquote>
-<p>Send only <strong>original_hash</strong> if you dont want us to have the document.</p>
+<p>Send only <strong>original_hash</strong> and <strong>name</strong> if you dont want us to have the document.</p>
 </blockquote>
 <pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
 
@@ -521,11 +521,13 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
   <span class="ss">callback_url: </span><span class="s1">'https://www.example.com/webhook/url'</span>
 <span class="p">)</span>
 
-<span class="c1"># OR</span>
+<span class="c1"># if you dont want us to have the PDF, you can send us </span>
+<span class="c1"># the original_hash and the name of the document. Both are required</span>
 <span class="n">file_contents</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s1">'path/to/my-file.pdf'</span><span class="p">)</span>
 <span class="n">original_hash</span> <span class="o">=</span> <span class="no">Digest</span><span class="o">::</span><span class="no">SHA256</span><span class="p">.</span><span class="nf">hexdigest</span><span class="p">(</span><span class="n">file_contents</span><span class="p">)</span>
 <span class="n">document</span> <span class="o">=</span> <span class="no">Mifiel</span><span class="o">::</span><span class="no">Document</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span>
   <span class="ss">original_hash: </span><span class="n">original_hash</span><span class="p">,</span>
+  <span class="ss">name: </span><span class="s1">'my-file.pdf'</span>
   <span class="ss">signatories: </span><span class="p">[</span> <span class="p">.</span><span class="nf">.</span><span class="o">.</span> <span class="p">]</span>
 <span class="p">)</span>
 </code></pre>
@@ -541,22 +543,28 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
 <span class="k">use</span> <span class="nx">Mifiel\Document</span><span class="p">;</span>
 
 <span class="nv">$document</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Document</span><span class="p">([</span>
-  <span class="s1">'file'</span> <span class="o">=&gt;</span> <span class="s1">'path/to/my-file.pdf'</span><span class="p">,</span>
-  <span class="c1">// OR
-</span>  <span class="s1">'original_hash'</span> <span class="o">=&gt;</span> <span class="nb">hash</span><span class="p">(</span><span class="s1">'sha256'</span><span class="p">,</span> <span class="nb">file_get_contents</span><span class="p">(</span><span class="s1">'path/to/my-file.pdf'</span><span class="p">)),</span>
+  <span class="s1">'file_path'</span> <span class="o">=&gt;</span> <span class="s1">'path/to/my-file.pdf'</span><span class="p">,</span>
   <span class="s1">'signatories'</span> <span class="o">=&gt;</span> <span class="p">[</span>
-    <span class="p">{</span> 
+    <span class="p">[</span> 
       <span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'Signer 1'</span><span class="p">,</span> 
       <span class="s1">'email'</span> <span class="o">=&gt;</span> <span class="s1">'signer1@email.com'</span><span class="p">,</span> 
       <span class="s1">'tax_id'</span> <span class="o">=&gt;</span>  <span class="s1">'AAA010101AAA'</span> 
-    <span class="p">},</span>
-    <span class="p">{</span> 
+    <span class="p">],</span>
+    <span class="p">[</span> 
       <span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'Signer 2'</span><span class="p">,</span> 
       <span class="s1">'email'</span> <span class="o">=&gt;</span> <span class="s1">'signer2@email.com'</span><span class="p">,</span> 
       <span class="s1">'tax_id'</span> <span class="o">=&gt;</span>  <span class="s1">'AAA010102AAA'</span>
-     <span class="p">}</span>
+    <span class="p">]</span>
   <span class="p">]</span>
-<span class="p">])</span>
+<span class="p">]);</span>
+<span class="c1">// if you dont want us to have the PDF, you can just send us 
+// the original_hash and the name of the document. Both are required
+</span><span class="nv">$document</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Document</span><span class="p">([</span>
+  <span class="s1">'original_hash'</span> <span class="o">=&gt;</span> <span class="nb">hash</span><span class="p">(</span><span class="s1">'sha256'</span><span class="p">,</span> <span class="nb">file_get_contents</span><span class="p">(</span><span class="s1">'path/to/my-file.pdf'</span><span class="p">)),</span>
+  <span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'my-file.pdf'</span><span class="p">,</span>
+  <span class="s1">'signatories'</span> <span class="o">=&gt;</span> <span class="o">...</span>
+<span class="p">]);</span>
+
 <span class="nv">$document</span><span class="o">-&gt;</span><span class="na">save</span><span class="p">();</span>
 <span class="cp">?&gt;</span>
 </code></pre>
@@ -576,25 +584,18 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
     <span class="s">'tax_id'</span><span class="p">:</span> <span class="s">'AAA010102AAA'</span>
   <span class="p">}</span>
 <span class="p">]</span>
-<span class="c"># Providde the SHA256 hash of the file you want to sign.</span>
-<span class="n">document</span> <span class="o">=</span> <span class="n">Document</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-  <span class="n">client</span><span class="o">=</span><span class="n">client</span><span class="p">,</span> 
-  <span class="n">signatories</span><span class="o">=</span><span class="n">signatories</span><span class="p">,</span> 
-  <span class="n">dhash</span><span class="o">=</span><span class="s">'some-sha256-hash'</span>
-<span class="p">)</span>
-<span class="c"># Or just send the file and we'll take care of everything.</span>
-<span class="c"># We will store the file for you. </span>
 <span class="n">document</span> <span class="o">=</span> <span class="n">Document</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
   <span class="n">client</span><span class="o">=</span><span class="n">client</span><span class="p">,</span> 
   <span class="n">signatories</span><span class="o">=</span><span class="n">signatories</span><span class="p">,</span> 
   <span class="nb">file</span><span class="o">=</span><span class="s">'test/fixtures/example.pdf'</span>
 <span class="p">)</span>
-
-<span class="n">document</span><span class="o">.</span><span class="nb">id</span> <span class="c"># -&gt; '7500e528-ac6f-4ad3-9afd-74487c11576a'</span>
-<span class="n">document</span><span class="o">.</span><span class="n">original_hash</span>
-<span class="n">document</span><span class="o">.</span><span class="nb">file</span>
-<span class="n">document</span><span class="o">.</span><span class="n">file_signed</span>
-<span class="c"># ...</span>
+<span class="c"># if you dont want us to have the PDF, you can just send us </span>
+<span class="c"># the original_hash and the name of the document. Both are required</span>
+<span class="n">document</span> <span class="o">=</span> <span class="n">Document</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+  <span class="n">client</span><span class="o">=</span><span class="n">client</span><span class="p">,</span> 
+  <span class="n">signatories</span><span class="o">=</span><span class="n">signatories</span><span class="p">,</span> 
+  <span class="n">dhash</span><span class="o">=</span><span class="s">'some-sha256-hash'</span>
+<span class="p">)</span>
 </code></pre>
 
 <p>Create a document to be signed by passing either a PDF file or the Hash of the file.</p>
@@ -1009,6 +1010,12 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
 <td>Text of the button at the end of the signing flow. When the user click</td>
 </tr>
 <tr>
+<td>pdf</td>
+<td>Base64</td>
+<td>null</td>
+<td><strong>Optional</strong> PDF in Base64 if you did not send us the PDF when you created the document.</td>
+</tr>
+<tr>
 <td>color</td>
 <td>String</td>
 <td>37BC9B</td>
@@ -1054,7 +1061,7 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
 <p>Following is a more detailed explanation of the steps involved in requesting and executing signatures within the embedded signing widget.</p>
 
 <ol>
-<li><p>The first step is to create a Document in your backend with the <em>API_ID</em> and <em>APP_SECRET</em>. You must pass the <strong>PDF file</strong> that is being signed (or a SHA256 encoded hash of the PDF), along with the following <strong>parameters</strong>: webhook (callback_url) and the email and name (optional) of each signer.</p></li>
+<li><p>The first step is to create a Document in your backend with the <em>API_ID</em> and <em>APP_SECRET</em>. You must pass the <strong>PDF file</strong> that is being signed (or a SHA256 encoded hash of the PDF and the name of the file), along with the following <strong>parameters</strong>: webhook (callback_url) and the email and name (optional) of each signer.</p></li>
 <li><p>Mifiel will return a <strong>Widget ID</strong> in the response, which you will then need to pass to the widget (running on your website&rsquo;s front-end).</p></li>
 <li><p>The signature process then takes place within your website. The signer will be able to preview the document, select the files of their FIEL, and enter the password of their FIEL to sign (during this process Mifiel will be verifying that the FIEL is valid and not expired). </p></li>
 <li><p>If successful, the signer will be presented with a page explaining that the signing was successful and that they will receive an email with the signed document. We will also display a confirmation button (e.g. &#39;Proceed to next step&rsquo;) which will return the user to the flow of your website.</p></li>
