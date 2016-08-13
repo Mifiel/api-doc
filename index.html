@@ -130,11 +130,11 @@
 
 <h3 id="getting-started">Getting started</h3>
 
-<p>To start using the API you will first need an <em>APP_ID</em> and a <em>APP_SECRET</em> which will be provided upon request (please contact us at <a href="mailto:hola@mifiel.com">hola@mifiel.com</a>).</p>
+<p>To start using the API you will first need an <em>APP_ID</em> and a <em>APP_SECRET</em> which you can generate in <a href="https://www.mifiel.com/access_tokens">mifiel.com/access_tokens</a>.</p>
 
 <p>You will first need to create an account at <a href="https://www.mifiel.com">mifiel.com</a> since the <em>APP_ID</em> and <em>APP_SECRET</em> will be linked to your account. </p>
 
-<p>We have language bindings in Shell and Ruby! You can view code examples on the right (switch between different programming languages using the tabs on top).</p>
+<p>We have language bindings in <strong>Shell</strong>, <strong>PHP</strong>, <strong>Ruby</strong> and <strong>Python</strong>! You can view code examples on the right (switch between different programming languages using the tabs on top).</p>
 
 <h3 id="api-versions">API Versions</h3>
 
@@ -1035,26 +1035,126 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
 </tr>
 </tbody></table>
 
-<h3 id="event-document-signed-successfully">Event: Document signed successfully</h3>
+<h2 id="events">Events</h2>
 
 <blockquote>
-<p>Listen for the Success event:</p>
+<p>Listen for Mifiel events:</p>
 </blockquote>
 <pre class="highlight html"><code><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
 <span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'message'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">isTrusted</span> <span class="o">&amp;&amp;</span> <span class="nx">e</span><span class="p">.</span><span class="nx">origin</span> <span class="o">===</span> <span class="s1">'https://www.mifiel.com'</span><span class="p">){</span>
+  <span class="c1">// accept messages from known hosts only</span>
+  <span class="c1">// change to https://stageex.mifiel.com if necessary</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">origin</span> <span class="o">!==</span> <span class="s1">'https://www.mifiel.com'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// We will always send an object</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">e</span><span class="p">.</span><span class="nx">data</span> <span class="o">!==</span> <span class="s1">'object'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// document signed succesfully</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">eventType</span> <span class="o">===</span> <span class="s1">'mifiel.widget.success'</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">,</span>
-        <span class="nb">document</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nb">document</span><span class="p">,</span>
+        <span class="nx">doc</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nb">document</span><span class="p">,</span>
         <span class="nx">signature</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">signature</span><span class="p">;</span>
-    <span class="c1">// document.original_hash;</span>
-    <span class="c1">// document.file_signed;</span>
+    <span class="c1">// doc.original_hash;</span>
+    <span class="c1">// doc.file_signed;</span>
+  <span class="p">}</span>
+  <span class="c1">// Event errors</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">eventType</span> <span class="o">===</span> <span class="s1">'mifiel.widget.error'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">error</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">error</span><span class="p">;</span>
+    <span class="c1">// error.code =&gt; 1001</span>
+    <span class="c1">// error.message =&gt; 'Invalid PDF, the pdf param has no data'</span>
   <span class="p">}</span>
 <span class="p">},</span> <span class="kc">false</span><span class="p">);</span>
 <span class="nt">&lt;/script&gt;</span>
 </code></pre>
 
-<p>After the user succesfully signs the document we will send back a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">postMessage</a>.</p>
+<p>We will send a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">postMessage</a> to your page to notify any of the events listed below.</p>
+
+<p>In order to secure the events sent by the widget you <strong>must</strong> verify that the event is coming from our servers. </p>
+
+<p>You can identify the events by <em>e.data.eventType</em>. The success event will have <strong>&ldquo;mifiel.widget.success&rdquo;</strong> and the error events will have <strong>&ldquo;mifiel.widget.error&rdquo;</strong>.</p>
+
+<h3 id="success-event">Success event</h3>
+
+<p>We will send the document json object and the signature of the user.</p>
+
+<h3 id="error-events">Error events</h3>
+
+<p>Error events have the property <em>eventType</em> set as <strong>&ldquo;mifiel.widget.error&rdquo;</strong> and a error object <em>(e.data.error)</em> with <em>code</em> and <em>message</em> properties:</p>
+
+<h4 id="widget-setup-error-events">Widget setup error events</h4>
+
+<table><thead>
+<tr>
+<th>Event</th>
+<th>Code</th>
+<th>Message</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Empty PDF</td>
+<td>1001</td>
+<td>Invalid PDF, the pdf param has no data</td>
+</tr>
+<tr>
+<td>Hashes do not match</td>
+<td>1002</td>
+<td>Invalid PDF, the provided pdf param is not the same as the uploaded one</td>
+</tr>
+</tbody></table>
+
+<p><em>Note: We send this errors only when you did not send us the PDF when the document was created.</em></p>
+
+<h4 id="user-error-events">User error events</h4>
+
+<table><thead>
+<tr>
+<th>Event</th>
+<th>Code</th>
+<th>Message</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Invalid Certificate</td>
+<td>2001</td>
+<td>Certificate is not valid</td>
+</tr>
+<tr>
+<td>Invalid Private Key</td>
+<td>2002</td>
+<td>Invalid Private Key</td>
+</tr>
+<tr>
+<td>Invalid Pasword</td>
+<td>2003</td>
+<td>Invalid password</td>
+</tr>
+<tr>
+<td>Files do not match</td>
+<td>2004</td>
+<td>.key file does not belong to the .cer file</td>
+</tr>
+</tbody></table>
+
+<h4 id="server-error-events">Server error events</h4>
+
+<table><thead>
+<tr>
+<th>Event</th>
+<th>Code</th>
+<th>Message</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Signature failure</td>
+<td>3002</td>
+<td>Fail to sign document</td>
+</tr>
+</tbody></table>
+
+<!-- Fail to request sigatures | 3001 | Fail to request signatures -->
 
 <h2 id="embedded-signing-flow">Embedded Signing Flow</h2>
 
