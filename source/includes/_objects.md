@@ -61,6 +61,7 @@ file            | String | Path where the original document can be downloaded
 file_signed     | String | Path where the signed file can be downloaded
 file_zipped     | String | Path where the file and signed file in a zip file can be downloaded 
 signatures      | Object[] | Array of a [Signature Model](#signature)
+external_id     | String   | A unique id for you to identify the document in the response or fetch it
 
 ## Certificate
 
@@ -116,3 +117,28 @@ signed_at       | Date   | Timestamp of the date signed
 certificate_number | String | Certificate number assigned by the certificate authority (e.g. SAT)
 tax_id          | String | RFC of the signer
 signature       | String | Electronic signature on the document (in hexadecimal)
+
+## Template
+
+```json
+{
+  "id": "446e56c9-6df3-444b-ad2b-c582f1fd0dd0",
+  "name": "NDA",
+  "description": "Confidential disclosure agreement between two parties",
+  "has_documents": false,
+  "header": "The HTML header",
+  "content": "The HTML content",
+  "footer": "The HTML footer",
+  "csv": "https://www.mifiel.com/api/v1/templates/446e56c9-6df3-444b-ad2b-c582f1fd0dd0/generate_populated_csv"
+}
+```
+
+Field           | Type |  Description
+--------------- | ---- | -----------
+id              | String | The ID of the Template
+name            | String | The name of the Template
+description     | String | The description
+hash_documents  | Boolean| Whether the template has documents or not
+header          | Text   | The Header of the template
+content         | Text   | The Content of the template
+footer          | Text   | The Footer of the template

@@ -12,6 +12,7 @@ includes:
   - objects
   - documents
   - certificates
+  - templates
   - widget
   - endorsables_setup
   - errors

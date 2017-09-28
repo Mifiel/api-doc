@@ -124,6 +124,7 @@ file         | String | __Optional__ File to be signed (The hash will be automat
 original_hash | String | __Optional__ _SHA256 encoded_ Hash of the original, unsigned document (The hash will be signed)
 signatories  | Array | A list containing the __name__, __tax_id__ (RFC) and __email__ of each __signer__
 callback_url | String | __Optional__ A Callback URL to post when the document gets signed
+external_id  | String  | __Optional__ A unique id for you to identify the document in the response or fetch it
 
 <aside class="info">
   <ul style="margin: 0; padding: 0">
