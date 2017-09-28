@@ -13,6 +13,7 @@ includes:
   - documents
   - certificates
   - widget
+  - endorsables_setup
   - errors
 
 toc_footers:
