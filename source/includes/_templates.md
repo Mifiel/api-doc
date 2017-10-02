@@ -485,6 +485,7 @@ $documents = Template.create_documents($template_id, $identifier $docs)
 ```json
 [{
   "id": "d6793b57-9101-4ce3-ae0d-e51868f3fdf9",
+  "folio": "{asset_id}|{address}",
   "signers": [{
     "name": "Some Name",
     "email": "some@email.com",
