@@ -302,7 +302,7 @@ documents = Template.documents(client, '29f3cb01-744d-4eae-8718-213aec8a1678')
 ## Generate a document from a template
 
 <aside class="info">
-  If you want the generated documents to be endorsables you must pass the attribute <b>tack: true</b> and the type of endorsable <b>type: 'promissory-note'</b>. Right now we only have <i>promissory-note</i> but we plan to add more in the future.
+  If you want the generated documents to be endorsables you must pass the attribute <b>track: true</b> and the type of endorsable <b>type: 'promissory-note'</b>. Right now we only have <i>promissory-note</i> but we plan to add more in the future.
 </aside>
 
 ```ruby
@@ -405,7 +405,7 @@ Returns a [Document Model](#document)
 ## Generate several documents from a template
 
 <aside class="info">
-  If you want the generated documents to be endorsables you must pass the attribute <b>tack: true</b> and the type of endorsable <b>type: 'promissory-note'</b>. Right now we only have <i>promissory-note</i> but we plan to add more in the future.
+  If you want the generated documents to be endorsables you must pass the attribute <b>track: true</b> and the type of endorsable <b>type: 'promissory-note'</b>. Right now we only have <i>promissory-note</i> but we plan to add more in the future.
 </aside>
 
 ```ruby
