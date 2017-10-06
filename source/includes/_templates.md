@@ -76,6 +76,8 @@ Templates are a tool that allows you to create templates that have a base format
 
 Field          | Type       |  Description
 -------------- | ---------- | -----------
+track          | Boolean    | __Optional__ true if you want your document to be endorsable
+type           | String     | __Optional__ (Required if param track is true) For now, the only value is 'promissory-note' (pagaré)
 name           | String     | The name of the template
 description    | String     | __Optional__ Internal description of your template
 header         | Text/HTML  | __Optional__ The Header of the PDF
@@ -274,7 +276,7 @@ document = documents.first
 ```
 
 ```shell
-curl -X POST "https://www.mifiel.com/api/v1/templates/29f3cb01-744d-4eae-8718-213aec8a1678/documents" \
+curl "https://www.mifiel.com/api/v1/templates/29f3cb01-744d-4eae-8718-213aec8a1678/documents" \
   -H "Authorization: APIAuth APP-ID:hmac-signature"
 ```
 
@@ -287,7 +289,7 @@ documents = Template.documents(client, '29f3cb01-744d-4eae-8718-213aec8a1678')
 
 ### HTTP Request
 
-`POST https://www.mifiel.com/api/v1/templates/:id/documents`
+`GET https://www.mifiel.com/api/v1/templates/:id/documents`
 
 > Response from Mifiel:
 
@@ -392,9 +394,11 @@ $document = Template.create_document($template_id, $name, $doc)
 
 Field          | Type       |  Description
 -------------- | ---------- | -----------
+track          | Boolean    | __Optional__ true if you want your document to be endorsable
+type           | String     | __Optional__ (Required if param track is true) For now, the only value is 'promissory-note' (pagaré)
 name           | String     | The name of the document
 fields         | JSON [Hash]| A hash with the fields `{name: value}`
-signatories    | Array      | A list containing the __name__, __tax_id__ (RFC) and __email__ of each signer
+signatories    | Array[Signatory] | A list of [Signatory Object](#signatory)
 callback_url   | String     | __Optional__ A Callback URL to post when the document gets signed
 external_id    | String     | __Optional__ A unique id for you to identify the document in the response or fetch it
 
@@ -403,10 +407,6 @@ external_id    | String     | __Optional__ A unique id for you to identify the d
 Returns a [Document Model](#document)
 
 ## Generate several documents from a template
-
-<aside class="info">
-  If you want the generated documents to be endorsables you must pass the attribute <b>track: true</b> and the type of endorsable <b>type: 'promissory-note'</b>. Right now we only have <i>promissory-note</i> but we plan to add more in the future.
-</aside>
 
 ```ruby
 require 'mifiel'
@@ -476,11 +476,23 @@ $documents = Template.create_documents($template_id, $identifier $docs)
 ?>
 ```
 
+The generation of documents runs in the background. We will respond with 200 (OK) and start generate the documents. When our server finishes we will POST you to the provided `callback_url` with a list of the created documents.
+
+<aside class="info">
+  If you want the generated documents to be endorsables you must pass the attribute <b>track: true</b> and the type of endorsable <b>type: 'promissory-note'</b>. Right now we only have <i>promissory-note</i> but we plan to add more in the future.
+</aside>
+
 ### HTTP Request
 
 `POST https://www.mifiel.com/api/v1/templates/:id/generate_documents`
 
 > Response from Mifiel:
+
+```json
+{ "status": "success" }
+```
+
+> When the documents are ready, we will send you a POST to the __callback_url__ with the following params:
 
 ```json
 [{
@@ -511,6 +523,6 @@ documents      | Array[Document] | Array of documents to create
 Field          | Type         |  Description
 -------------- | ------------ | -----------
 fields         | Hash         | Hash of key, value of each field <br>`{field_name: 'Field Content'}`
-signatories    | Array        | A list containing the __name__, __tax_id__ (RFC) and __email__ of each signer
+signatories    | Array[Signatory] | A list of [Signatory Object](#signatory)
 callback_url   | String       | __Optional__ A Callback URL to post when the document gets signed
 external_id    | String       | __Optional__ A unique id for you to identify the document in the response or fetch it

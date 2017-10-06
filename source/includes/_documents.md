@@ -121,7 +121,7 @@ Field                 | Type |  Description
 --------------------- | ---- | -----------
 file         | String | __Optional__ File to be signed (The hash will be automatically extracted from the file and signed)
 original_hash | String | __Optional__ _SHA256 encoded_ Hash of the original, unsigned document (The hash will be signed)
-signatories  | Array | A list containing the __name__, __tax_id__ (RFC) and __email__ of each __signer__
+signatories  | Array[Signatory] | A list of [Signatory Object](#signatory)
 callback_url | String | __Optional__ A Callback URL to post when the document gets signed
 external_id  | String  | __Optional__ A unique id for you to identify the document in the response or fetch it
 track        | Boolean | __Optional__ true if you want your document to be andorsable.
@@ -488,7 +488,7 @@ Field        | Type     |  Description
 callback_url | String   | __Optional__ A Callback URL to post when the document gets signed
 receiver     | String(email) OR Hash | __Opptional__ Receiver info, it could be an email or a hash containing __name__, __tax_id__ (RFC) and __email__.
 file         | File     | __Optional__ The Transfer File. Depending on the endorsable document type, it could be required.
-signatories  | Array    | __Optional__ A list containing the __name__, __tax_id__ (RFC) and __email__ of each __signer__.
+signatories  | Array[Signatory] | __Optional__ A list of [Signatory Object](#signatory)
 template_id  | String   | __Optional__ The template id that you want to use to create the File.
 fields       | JSON [Hash]| __Optional__ A hash with the fields `{name: value}`
 

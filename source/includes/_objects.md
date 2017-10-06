@@ -142,3 +142,23 @@ hash_documents  | Boolean| Whether the template has documents or not
 header          | Text   | The Header of the template
 content         | Text   | The Content of the template
 footer          | Text   | The Footer of the template
+
+## Signatory
+
+```json
+{
+  "email": "signatory@email.com",
+  "name": "Signatory Name",
+  "tax_id": "AAA010101AAA",
+  "field": "beneficiary" 
+}
+```
+
+Field           | Type |  Description
+--------------- | ---- | -----------
+email           | String | The email of the signatory
+name            | String | __Optional__ The name of the signatory
+tax_id          | String | __Optional__ The tax_id (RFC) of the signatory
+field           | String | __Optional__ The type of signatory.
+
+The _field_ param is required in endorsable documents. For example in a promissory note document (created with params `track: true, type: 'promissory-note'`) possible values are __beneficiary__ and __suscriptor__ for issuing and __holder__ and __receiver__ for transfering.
