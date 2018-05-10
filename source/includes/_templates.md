@@ -80,7 +80,7 @@ Templates are a tool that allows you to create templates that have a base format
 
 Field          | Type       |  Description
 -------------- | ---------- | -----------
-track          | Boolean    | __Optional__ true if you want your document to be endorsable
+track          | Boolean    | __Optional__ true if you want documents generated from this template to be endorsable
 type           | String     | __Optional__ (Required if param track is true) For now, the only value is 'promissory-note' (pagaré)
 name           | String     | The name of the template
 description    | String     | __Optional__ Internal description of your template
@@ -340,10 +340,9 @@ file            | String | Path where the original document can be downloaded
 ```ruby
 require 'mifiel'
 
-template_id = '29f3cb01-744d-4eae-8718-213aec8a1678'
-name = 'My NDA'
-callback_url = 'https://mypage.com'
-doc = {
+document = Mifiel::Document.create_from_template(
+  template_id: '29f3cb01-744d-4eae-8718-213aec8a1678', 
+  name: 'document.pdf',
   fields: {
     name: 'My Client Name',
     date: 'Sep 27 2017'
@@ -355,8 +354,18 @@ doc = {
   }],
   callback_url: 'https://www.example.com/webhook/url',
   external_id: 'unique-id'
-}
-template = Mifiel::Template.create_document(template_id, name, doc, callback_url)
+)
+
+# If you already have a Template instance you can also do
+document = template.generate_document(
+  name: 'document.pdf',
+  fields: { ... },
+  ...
+)
+
+# document.id
+# document.original_hash
+# document.signers
 ```
 
 ```shell
@@ -371,12 +380,12 @@ curl -X POST "https://www.mifiel.com/api/v1/templates/29f3cb01-744d-4eae-8718-21
 ```
 
 ```python
-from mifiel import Template, Client
+from mifiel import Document, Client
 client = Client(app_id='APP_ID', secret_key='APP_SECRET')
 
-template_id = '29f3cb01-744d-4eae-8718-213aec8a1678'
-name = 'My NDA'
-doc = {
+args = {
+  'template_id': '29f3cb01-744d-4eae-8718-213aec8a1678',
+  'name': 'My NDA',
   'fields': {
     'name': 'My Client Name',
     'date': 'Sep 27 2017'
@@ -389,31 +398,31 @@ doc = {
   'callback_url': 'https://www.example.com/webhook/url',
   'external_id': 'unique-id'
 }
-document = Template.create_document(client, template_id, name, doc)
+document = Document.create_from_template(client, args)
 ```
 
 ```php
 <?php
 require 'vendor/autoload.php';
-use Mifiel\Template;
+use Mifiel\Document;
 
-$template_id = '29f3cb01-744d-4eae-8718-213aec8a1678'
-$name = 'My NDA'
-$doc = [
-  'fields': [
-    'name': 'My Client Name',
-    'date': 'Sep 27 2017'
+$args = [
+  'template_id' => '29f3cb01-744d-4eae-8718-213aec8a1678',
+  'name' => 'My NDA',
+  'fields' => [
+    'name' => 'My Client Name',
+    'date' => 'Sep 27 2017'
   ],
-  'signatories': [[
-    'name': 'Some name',
-    'email': 'some@email.com',
-    'tax_id': 'AAA010101AAA'
+  'signatories' => [[
+    'name' => 'Some name',
+    'email' => 'some@email.com',
+    'tax_id' => 'AAA010101AAA'
   ]],
-  'callback_url': 'https://www.example.com/webhook/url',
-  'external_id': 'unique-id'
+  'callback_url' => 'https://www.example.com/webhook/url',
+  'external_id' => 'unique-id'
 ]
 
-$document = Template.create_document($template_id, $name, $doc)
+$document = Document.create_document($args)
 ?>
 ```
 
@@ -425,7 +434,9 @@ $document = Template.create_document($template_id, $name, $doc)
 
 Field          | Type       |  Description
 -------------- | ---------- | -----------
-name           | String     | The name of the document
+track          | Boolean    | __Optional__ true if you want your document to be endorsable
+type           | String     | __Optional__ (Required if param track is true) For now, the only value is 'promissory-note' (pagaré)
+name           | String     | __Optional__ The name of the document
 fields         | JSON [Hash]| A hash with the fields `{name: value}`
 signatories    | Array[Signatory] | A list of [Signatory Object](#signatory)
 callback_url   | String     | __Optional__ A Callback URL to post when the document gets signed
@@ -433,33 +444,88 @@ external_id    | String     | __Optional__ A unique id for you to identify the d
 
 ### Response
 
-Returns a [Document Model](#document), if the template was created with the `tracked` param set to true, then it returns a [Tracked Document Model](#tracked-document).
+Returns a [Document Model](#document)
 
 ## Generate several documents from a template
 
 ```ruby
 require 'mifiel'
 
-template = Mifiel::Template.new(id: '29f3cb01-744d-4eae-8718-213aec8a1678')
-identifier = 'name'
-callback_url = 'https://somecallback.com'
-docs = [{
-  fields: {
-    name: 'My Client Name',
-    date: 'Sep 27 2017'
-  },
-  signatories: [{
-    name: 'Some Name',
-    email: 'some@email.com',
-    tax_id: 'AAA010101AAA'
-  }],
-  callback_url: 'https://www.my-site.com/webhook',
-  external_id: 'unique-id'
-}]
-documents = template.create_documents(identifier: identifier, documents: docs, callback_url: callback_url)
+args = {
+  template_id: '29f3cb01-744d-4eae-8718-213aec8a1678',
+  identifier: 'name',
+  callback_url: 'https://www.my-site.com/documents-ready',
+  documents: [{
+    fields: {
+      name: 'My Client Name',
+      date: 'Sep 27 2017'
+    },
+    signatories: [{
+      name: 'Some Name',
+      email: 'some@email.com',
+      tax_id: 'AAA010101AAA'
+    }],
+    callback_url: 'https://www.my-site.com/sign-webhook',
+    external_id: 'unique-id'
+  }]
+}
+response = Mifiel::Document.create_many_from_template(args)
+response.status == 'success'
 ```
 
-The generation of documents runs in the background. We will respond with 200 (OK) and start generate the documents. When our server finishes we will POST you to the provided `callback_url` with a list of the created documents.
+```python
+from mifiel import Document, Client
+client = Client(app_id='APP_ID', secret_key='APP_SECRET')
+
+args = {
+  'template_id': '29f3cb01-744d-4eae-8718-213aec8a1678',
+  'identifier': 'name',
+  'callback_url': 'https://www.my-site.com/documents-ready',
+  'documents': [{
+    'fields': {
+      'name': 'My Client Name',
+      'date': 'Sep 27 2017'
+    },
+    'signatories': [{
+      'name': 'Some Name',
+      'email': 'some@email.com',
+      'tax_id': 'AAA010101AAA'
+    }],
+    'callback_url': 'https://www.my-site.com/sign-webhook',
+    'external_id': 'unique-id'
+  }]
+}
+documents = Document.create_many_from_template(client, template_id, identifier, docs)
+```
+
+```php
+<?php
+require 'vendor/autoload.php';
+use Mifiel\Document;
+
+$args = [
+  'template_id' => '29f3cb01-744d-4eae-8718-213aec8a1678',
+  'identifier' => 'name',
+  'callback_url' => 'https://www.my-site.com/documents-ready',
+  'documents' => [{
+    'fields' => {
+      'name' => 'My Client Name',
+      'date' => 'Sep 27 2017'
+    },
+    'signatories' => [{
+      'name' => 'Some Name',
+      'email' => 'some@email.com',
+      'tax_id' => 'AAA010101AAA'
+    }],
+    'callback_url' => 'https://www.my-site.com/sign-webhook',
+    'external_id' => 'unique-id'
+  }]
+]
+$documents = Document.create_many_from_template($args)
+?>
+```
+
+The generation of documents runs in the background. We will respond with 200 (OK) and start generating the documents. When our servers finish, we will POST you to the provided `callback_url` with a list of the created documents.
 
 ### HTTP Request
 
@@ -493,7 +559,7 @@ The generation of documents runs in the background. We will respond with 200 (OK
 
 Field          | Type         |  Description
 -------------- | ------------ | -----------
-identifier     | String       | A field name to use in the document name e.g "name" will append the field "name" to the document name "My-NDA-My-Client-Name.pdf"
+identifier     | String       | __Optional__ A field name to use in the document name e.g "name" will append the field "name" to the document name "My-NDA-My-Client-Name.pdf"
 callback_url   | String       | A Callback URL to POST when all documents have been created
 documents      | Array[Document] | Array of documents to create
 
@@ -501,6 +567,7 @@ documents      | Array[Document] | Array of documents to create
 
 Field          | Type         |  Description
 -------------- | ------------ | -----------
+name           | Hash         | The name of the document eg. _document.pdf_
 fields         | Hash         | Hash of key, value of each field <br>`{field_name: 'Field Content'}`
 signatories    | Array[Signatory] | A list of [Signatory Object](#signatory)
 callback_url   | String       | __Optional__ A Callback URL to post when the document gets signed
