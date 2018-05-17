@@ -40,7 +40,8 @@ Contains information about the PDF file being signed
       "email": "signer1@email.com",
       "name": "Jorge Morales"
     }
-  }]
+  }],
+  "widget_id": "ABCD1234"
 }
 
 ```
@@ -62,6 +63,42 @@ file_signed     | String | Path where the signed file can be downloaded
 file_zipped     | String | Path where the file and signed file in a zip file can be downloaded 
 signatures      | Object[] | Array of a [Signature Model](#signature)
 external_id     | String   | A unique id for you to identify the document in the response or fetch it
+
+## Tracked Document
+
+```json
+{
+  "tracked": true,
+  "type": "promissory-note",
+  "transferable": true,
+  "asset": {
+      "id": "f48732f18l67612427c889ae08789032",
+      "address": "2N2o6xjB1K5uhjg4Zaj8z9EbnGyrqQazpwX"
+  }
+}
+```
+
+A tracked document, such as a Pagaré. 
+
+You can know if a document is tracked by checking the `tracked` parameter. It will be true if a document is tracked 
+
+Contains the same information as the [Document Model](#document) with the following extra attributes: 
+
+Field           | Type |  Description
+--------------- | ---- | -----------
+tracked         | boolean | Always set to true for tracked documents.   
+type            | String | Type with which the document was created (right now we only support promissory-note)
+transferable    | boolean | True if the document is able to be transferred
+asset           | Object | Information about the asset
+
+### Asset Object
+
+The asset object has the following attributes
+
+Field           | Type |  Description
+--------------- | ---- | -----------
+id              | String | Id of the asset that belongs to the document
+address         | String | Address of the document that is being transferred.
 
 ## Certificate
 
@@ -133,6 +170,21 @@ signature       | String | Electronic signature on the document (in hexadecimal)
 }
 ```
 
+```json
+{
+  "id": "446e56c9-6df3-444b-ad2b-c582f1fd0dd0",
+  "name": "Pagare",
+  "description": "Pagare between two parties",
+  "has_documents": false,
+  "header": "The HTML header",
+  "content": "The HTML content",
+  "footer": "The HTML footer",
+  "csv": "https://www.mifiel.com/api/v1/templates/446e56c9-6df3-444b-ad2b-c582f1fd0dd0/generate_populated_csv",
+  "tracked": true,
+  "type": "prommisory-note"
+}
+```
+
 Field           | Type |  Description
 --------------- | ---- | -----------
 id              | String | The ID of the Template
@@ -142,6 +194,8 @@ hash_documents  | Boolean| Whether the template has documents or not
 header          | Text   | The Header of the template
 content         | Text   | The Content of the template
 footer          | Text   | The Footer of the template
+tracked         | Boolean| Whether the template is tracked or not
+type            | String | Type of the template if it is tracked. For now, the only value is 'promissory-note' (pagaré)
 
 ## Signatory
 
@@ -150,7 +204,7 @@ footer          | Text   | The Footer of the template
   "email": "signatory@email.com",
   "name": "Signatory Name",
   "tax_id": "AAA010101AAA",
-  "field": "beneficiary" 
+  "field": "beneficiary"
 }
 ```
 

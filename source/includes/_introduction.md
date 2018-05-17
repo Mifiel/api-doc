@@ -28,7 +28,7 @@ Just change the **www**.mifiel.com for **sandbox**.mifiel.com in every endpoint 
 
 To start using the API in the **Production** environment you need to first create an account at [mifiel.com](https://www.mifiel.com).
 
-Once you have an account you will need an _APP_ID_ and a _APP_SECRET_ which you can generate in [mifiel.com/access_tokens](https://www.mifiel.com/access_tokens).
+Once you have an account you will need an _APP_ID_ and an _APP_SECRET_ which you can generate in [mifiel.com/access_tokens](https://www.mifiel.com/access_tokens).
 
 ## Mifiel-supported SDKs
 

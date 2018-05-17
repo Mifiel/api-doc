@@ -68,6 +68,10 @@ template = Template.create(
 
 Templates are a tool that allows you to create templates that have a base format. You can define fields within the html so you can then create a custumized document.
 
+<aside class="info">
+  If you want the generated documents to be endorsables you must pass the attribute <b>track: true</b> and the type of endorsable <b>type: 'promissory-note'</b>. Right now we only have <i>promissory-note</i> but we plan to add more in the future.
+</aside>
+
 ### HTTP Request
 
 `POST https://www.mifiel.com/api/v1/templates`
@@ -250,11 +254,11 @@ fields = Template.fields(client, '29f3cb01-744d-4eae-8718-213aec8a1678')
 [{
   "type": "text", 
   "name": "name",
-  "value": "Name" 
+  "value": "Miguel Rodriguez" 
 }, {
   "type": "text", 
   "name": "date",
-  "value": "Date"
+  "value": "Some Date"
 }]
 ```
 
@@ -262,17 +266,30 @@ fields = Template.fields(client, '29f3cb01-744d-4eae-8718-213aec8a1678')
 
 `GET https://www.mifiel.com/api/v1/templates/:id/fields`
 
+### Response
+
+Returns an array of the template fields (parsed from the HTML) where each field has the following information:
+
+Field           | Type |  Description
+--------------- | ---- | -----------
+type            | String | HTML type attribute of the field
+name            | String | HTML name attribute of the field
+value           | String | Value which was placed between the field tag in the HTML
+
 ## Template documents
 
-Get the documents generated with a specific template.
+Get the non deleted documents generated with a specific template.
 
 ```ruby
 require 'mifiel'
 
 documents = Mifiel::Template.documents('29f3cb01-744d-4eae-8718-213aec8a1678')
 document = documents.first
-# document.id
-# document.status
+# Mifiel::Document
+document.id
+# "abcd1234"
+document.status
+# [0, "Pending"]
 ```
 
 ```shell
@@ -287,31 +304,45 @@ client = Client(app_id='APP_ID', secret_key='APP_SECRET')
 documents = Template.documents(client, '29f3cb01-744d-4eae-8718-213aec8a1678')
 ```
 
-### HTTP Request
-
-`GET https://www.mifiel.com/api/v1/templates/:id/documents`
-
 > Response from Mifiel:
 
 ```json
 [{
   "id": "document-id",
-  "file_file_name": "file-name.pdf",
-  "status": [0, "Pending"]
+  "file_name": "file-name.pdf",
+  "status": [0, "Pending"],
+  "owner": {
+    "email": "signer1@email.com",
+    "name": "Jorge Morales"
+  },
+  "file": "/api/v1/documents/.../file"
 }]
 ```
 
-## Generate a document from a template
+### HTTP Request
 
-<aside class="info">
-  If you want the generated documents to be endorsables you must pass the attribute <b>track: true</b> and the type of endorsable <b>type: 'promissory-note'</b>. Right now we only have <i>promissory-note</i> but we plan to add more in the future.
-</aside>
+`GET https://www.mifiel.com/api/v1/templates/:id/documents`
+
+### Response 
+
+Returns an array with the following information about the documents: 
+
+Field           | Type |  Description
+--------------- | ---- | -----------
+id              | String | ID of the document
+file_name       | String | Name of the created template file
+status          | Array  | [code, code_message] `0: not signed, 1: signed`
+owner           | Object | The owner of the document. The user who created the document.
+file            | String | Path where the original document can be downloaded
+
+## Generate a document from a template
 
 ```ruby
 require 'mifiel'
 
 template_id = '29f3cb01-744d-4eae-8718-213aec8a1678'
 name = 'My NDA'
+callback_url = 'http://mypage.com'
 doc = {
   fields: {
     name: 'My Client Name',
@@ -325,7 +356,7 @@ doc = {
   callback_url: 'https://www.example.com/webhook/url',
   external_id: 'unique-id'
 }
-template = Mifiel::Template.create_document(template_id, name, doc)
+template = Mifiel::Template.create_document(template_id, name, doc, callback_url)
 ```
 
 ```shell
@@ -394,8 +425,6 @@ $document = Template.create_document($template_id, $name, $doc)
 
 Field          | Type       |  Description
 -------------- | ---------- | -----------
-track          | Boolean    | __Optional__ true if you want your document to be endorsable
-type           | String     | __Optional__ (Required if param track is true) For now, the only value is 'promissory-note' (pagaré)
 name           | String     | The name of the document
 fields         | JSON [Hash]| A hash with the fields `{name: value}`
 signatories    | Array[Signatory] | A list of [Signatory Object](#signatory)
@@ -404,15 +433,16 @@ external_id    | String     | __Optional__ A unique id for you to identify the d
 
 ### Response
 
-Returns a [Document Model](#document)
+Returns a [Document Model](#document), if the template was created with the `tracked` param set to true, then it returns a [Tracked Document Model](#tracked-document).
 
 ## Generate several documents from a template
 
 ```ruby
 require 'mifiel'
 
-template_id = '29f3cb01-744d-4eae-8718-213aec8a1678'
+template = Mifiel::Template.new(id: '29f3cb01-744d-4eae-8718-213aec8a1678')
 identifier = 'name'
+callback_url = 'http://somecallback.com'
 docs = [{
   fields: {
     name: 'My Client Name',
@@ -426,61 +456,10 @@ docs = [{
   callback_url: 'https://www.my-site.com/webhook',
   external_id: 'unique-id'
 }]
-documents = Mifiel::Template.create_documents(template_id, identifier, docs)
-```
-
-```python
-from mifiel import Template, Client
-client = Client(app_id='APP_ID', secret_key='APP_SECRET')
-
-template_id = '29f3cb01-744d-4eae-8718-213aec8a1678'
-identifier = 'name'
-docs = [{
-  'fields': {
-    'name': 'My Client Name',
-    'date': 'Sep 27 2017'
-  },
-  'signatories': [{
-    'name': 'Some Name',
-    'email': 'some@email.com',
-    'tax_id': 'AAA010101AAA'
-  }],
-  'callback_url': 'https://www.my-site.com/webhook',
-  'external_id': 'unique-id'
-}]
-documents = Template.create_documents(client, template_id, identifier, docs)
-```
-
-```php
-<?php
-require 'vendor/autoload.php';
-use Mifiel\Template;
-
-$template_id = '29f3cb01-744d-4eae-8718-213aec8a1678'
-$identifier = 'name'
-$callback_url = 'https://www.my-site.com/template_documents_created'
-$docs = [{
-  'fields' => {
-    'name' => 'My Client Name',
-    'date' => 'Sep 27 2017'
-  },
-  'signatories' => [[
-    'name' => 'Some Name',
-    'email' => 'some@email.com',
-    'tax_id' => 'AAA010101AAA'
-  ]],
-  'callback_url' => 'https://www.my-site.com/webhook',
-  'external_id' => 'unique-id'
-}]
-$documents = Template.create_documents($template_id, $identifier $docs)
-?>
+documents = template.create_documents(identifier: identifier, documents: docs, callback_url: callback_url)
 ```
 
 The generation of documents runs in the background. We will respond with 200 (OK) and start generate the documents. When our server finishes we will POST you to the provided `callback_url` with a list of the created documents.
-
-<aside class="info">
-  If you want the generated documents to be endorsables you must pass the attribute <b>track: true</b> and the type of endorsable <b>type: 'promissory-note'</b>. Right now we only have <i>promissory-note</i> but we plan to add more in the future.
-</aside>
 
 ### HTTP Request
 
@@ -504,7 +483,7 @@ The generation of documents runs in the background. We will respond with 200 (OK
     "tax_id": "AAA010101AAA",
     "widget_id": "d6793b57-9101-4ce3-ae0d-e51868f3fdf9"
   }],
-  "file_file_name": "NDA-My-Client-Name.pdf",
+  "file_name": "NDA-My-Client-Name.pdf",
   "callback_url": "https://www.my-site.com/webhook",
   "external_id": "unique-id"
 }]

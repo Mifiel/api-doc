@@ -321,7 +321,7 @@ Field     | Type |  Description
 email     | String | Email of the signer
 cc        | String | Email of any non-signing viewers that should receive a copy of the signed document
 
-## Transfer one document
+## Transfer a document
 
 ```ruby
 require 'mifiel'
@@ -473,20 +473,24 @@ document.transfer(
 )
 ```
 
-Endorsable documents (created with `track: true` param) can be transfered to other users. To do this, the receiver must have an account in www.mifiel.com and must be configured to receive endorsable documents.
+Endorsable documents (created with `track: true` param) can be transferred to other users. To do this, the receiver must have an account in [Mifiel](www.mifiel.com) and must be configured to receive endorsable documents.
 
-Depending on the endorsable document type, the API will require a transfer PDF, this PDF usually contains the agreement of the transfer agreement. It will be signed by you and depending on the endorsable type, the API could require the receiver also to sign.
+Depending on the endorsable document type, the API will require a transfer PDF, this PDF usually contains the agreement of the transfer agreement. It will be signed by you and depending on the endorsable type, the API could require the receiver to also sign.
 
 In the case that the receiver account is not configured, we will return an error and send an email requiring him to do so. When the receiver configures his account we will send a notification to the callback_url provided so your system knows when to retry the call again.
 
-Use this endpoint to create a transfer document. After 
+Use this endpoint to create a transfer document. 
+
+### HTTP Request
+
+`POST https://www.mifiel.com/api/v1/documents/:id/transfer`
 
 ### Parameters
 
 Field        | Type     |  Description
 ------------ | -------- | -----------
 callback_url | String   | __Optional__ A Callback URL to post when the document gets signed
-receiver     | String(email) OR Hash | __Opptional__ Receiver info, it could be an email or a hash containing __name__, __tax_id__ (RFC) and __email__.
+receiver     | String(email) OR Hash | __Optional__ Receiver info, it could be an email or a hash containing __name__, __tax_id__ (RFC) and __email__.
 file         | File     | __Optional__ The Transfer File. Depending on the endorsable document type, it could be required.
 signatories  | Array[Signatory] | __Optional__ A list of [Signatory Object](#signatory)
 template_id  | String   | __Optional__ The template id that you want to use to create the File.
@@ -494,46 +498,4 @@ fields       | JSON [Hash]| __Optional__ A hash with the fields `{name: value}`
 
 ### Response
 
-Returns a [Document Model](#document)
-
-## Transfer Many Documents
-
-Create many transfers in one call.
-
-```ruby
-require 'mifiel'
-
-transfer = {
-  document_id: 'doc-id'
-  # see 'Transfer one document' for required options
-} 
-documents = Mifiel::Document.transfer_many([transfer])
-```
-
-```php
-<?php
-require 'vendor/autoload.php';
-use Mifiel\Document;
-
-$transfer = [
-  'document_id' => 'doc-id'
-  # see 'Transfer one document' for required options
-]
-$document = Document::transfer([$transfer]);
-?>
-```
-
-```python
-from mifiel import Document, Client
-client = Client(app_id='APP_ID', secret_key='APP_SECRET')
-
-transfer = {
-  'document_id': 'doc-id'
-  # see 'Transfer one document' for required options
-}
-document = Document.transfer(client, [transfer])
-```
-
-### Response
-
-Returns array of [Document Model](#document)
+Returns a [Tracked Document Model](#tracked-document)
