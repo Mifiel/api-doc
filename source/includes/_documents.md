@@ -473,13 +473,13 @@ document.transfer(
 )
 ```
 
-Endorsable documents (created with `track: true` param) can be transferred to other users. To do this, the receiver must have an account in [Mifiel](www.mifiel.com) and must be configured to receive endorsable documents.
+Endorsable documents (created with `track: true` param) can be transferred to other users. To do this, the receiver must have an account in [Mifiel](www.mifiel.com) and must have set up their account to be able to receive endorsable documents.
 
-Depending on the endorsable document type, the API will require a transfer PDF, this PDF usually contains the agreement of the transfer agreement. It will be signed by you and depending on the endorsable type, the API could require the receiver to also sign.
+A transfer document is a page that is annexed to the original document that contains the terms of the agreement to endorse the document. It is signed by the owner (as well as the receiver in some cases) to acknowledge that the ownership of the document has been transferred. Mifiel generates a transfer document by default at the time of endorsement, but if you would like to use your own custom text and design, please contact us.
 
 In the case that the receiver account is not configured, we will return an error and send an email requiring him to do so. When the receiver configures his account we will send a notification to the callback_url provided so your system knows when to retry the call again.
 
-Use this endpoint to create a transfer document. 
+Use this endpoint to transfer an endorsable document.
 
 ### HTTP Request
 

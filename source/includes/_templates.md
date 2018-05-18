@@ -69,7 +69,7 @@ template = Template.create(
 Templates are a tool that allows you to create templates that have a base format. You can define fields within the html so you can then create a custumized document.
 
 <aside class="info">
-  If you want the generated documents to be endorsables you must pass the attribute <b>track: true</b> and the type of endorsable <b>type: 'promissory-note'</b>. Right now we only have <i>promissory-note</i> but we plan to add more in the future.
+  If you want the documents generated from the template to be endorsable, you must pass the attribute <b>track: true</b> and specify the type of endorsable document you'd like it to be. At the moment the only type available is promissory notes (pagarés), which you can specify by passing the attribute <b>type: 'promissory-note'</b>.
 </aside>
 
 ### HTTP Request
@@ -258,7 +258,7 @@ fields = Template.fields(client, '29f3cb01-744d-4eae-8718-213aec8a1678')
 }, {
   "type": "text", 
   "name": "date",
-  "value": "Some Date"
+  "value": "15/8/2018"
 }]
 ```
 
@@ -278,7 +278,7 @@ value           | String | Value which was placed between the field tag in the H
 
 ## Template documents
 
-Get the non deleted documents generated with a specific template.
+Get all the active (non deleted) documents generated from a specific template.
 
 ```ruby
 require 'mifiel'
@@ -325,12 +325,12 @@ documents = Template.documents(client, '29f3cb01-744d-4eae-8718-213aec8a1678')
 
 ### Response 
 
-Returns an array with the following information about the documents: 
+Returns an array with the following information about each document: 
 
 Field           | Type |  Description
 --------------- | ---- | -----------
 id              | String | ID of the document
-file_name       | String | Name of the created template file
+file_name       | String | Name of the template file created
 status          | Array  | [code, code_message] `0: not signed, 1: signed`
 owner           | Object | The owner of the document. The user who created the document.
 file            | String | Path where the original document can be downloaded
@@ -342,7 +342,7 @@ require 'mifiel'
 
 template_id = '29f3cb01-744d-4eae-8718-213aec8a1678'
 name = 'My NDA'
-callback_url = 'http://mypage.com'
+callback_url = 'https://mypage.com'
 doc = {
   fields: {
     name: 'My Client Name',
@@ -442,7 +442,7 @@ require 'mifiel'
 
 template = Mifiel::Template.new(id: '29f3cb01-744d-4eae-8718-213aec8a1678')
 identifier = 'name'
-callback_url = 'http://somecallback.com'
+callback_url = 'https://somecallback.com'
 docs = [{
   fields: {
     name: 'My Client Name',

@@ -2,7 +2,7 @@
 
 ## User account setup
 
-Every user (issuer or receiver) of an endorsable document must setup his account. In this setup we will generate a set of crypto-currency addresses for the user using his FIEL. The addresses are used to hold the asset.
+Every user (issuer or receiver) of an endorsable document must set up his account. During this setup process, we will use the user's FIEL/e.firma to derive a set of cryptocurrency addresses where the assets (the endorsable documents) will be stored.
 
 The widget is an embedded tool to setup the required private keys that generate the addresses. By embedding this tool, your users can setup their account without having to leave the flow of your website.
 
@@ -45,7 +45,7 @@ Field     | Type    | Default |  Description
 widgetId  | String  |         | Widget ID.
 appendTo  | String  | body    | ID of the element in the page
 successBtnText | String | 'OK' | Text of the button at the end of the setup flow. When the user clicks, will trigger an event so you can cach it.
-color     | String  | 37BC9B  | __Optionl__ Custom color in hexadecimal (e.g. 555555) to personalize the look and feel of your widget. Typically the primary color of your app.
+color     | String  | 37BC9B  | __Optional__ Custom color in hexadecimal (e.g. 555555) to personalize the look and feel of your widget. Typically the primary color of your app.
 width     | String  | 100%    | __Optional__ Width of the widget __[px or %]__
 height    | String  | 1100    | __Optional__ Height of the widget __[px]__
 
