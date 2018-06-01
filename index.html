@@ -144,15 +144,13 @@
 
 <p>Just change the <strong>www</strong>.mifiel.com for <strong>sandbox</strong>.mifiel.com in every endpoint that you use.</p>
 
-<aside class="warning">
-  Documents signed in the Sandobox environment are legally invalid and should not be used for legal purposes.
-</aside>
+<aside class="warning">The Sandbox environment is not intended to be used to sign non-test documents. Documents signed in Sandbox will not have the same legal validity as those signed in production.</aside>
 
 <h3 id="production-enviroment">Production enviroment</h3>
 
 <p>To start using the API in the <strong>Production</strong> environment you need to first create an account at <a href="https://www.mifiel.com">mifiel.com</a>.</p>
 
-<p>Once you have an account you will need an <em>APP_ID</em> and a <em>APP_SECRET</em> which you can generate in <a href="https://www.mifiel.com/access_tokens">mifiel.com/access_tokens</a>.</p>
+<p>Once you have an account you will need an <em>APP_ID</em> and an <em>APP_SECRET</em> which you can generate in <a href="https://www.mifiel.com/access_tokens">mifiel.com/access_tokens</a>.</p>
 
 <h2 id="mifiel-supported-sdks">Mifiel-supported SDKs</h2>
 
@@ -296,7 +294,8 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
       </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"signer1@email.com"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jorge Morales"</span><span class="w">
     </span><span class="p">}</span><span class="w">
-  </span><span class="p">}]</span><span class="w">
+  </span><span class="p">}],</span><span class="w">
+  </span><span class="nt">"widget_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABCD1234"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 
 </span></code></pre>
@@ -377,6 +376,81 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
 <td>signatures</td>
 <td>Object[]</td>
 <td>Array of a <a href="#signature">Signature Model</a></td>
+</tr>
+<tr>
+<td>external_id</td>
+<td>String</td>
+<td>A unique id for you to identify the document in the response or fetch it</td>
+</tr>
+</tbody></table>
+
+<h2 id="endorsable-document">Endorsable Document</h2>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"tracked"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"promissory-note"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"transferable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"asset"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"f48732f18l67612427c889ae08789032"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2N2o6xjB1K5uhjg4Zaj8z9EbnGyrqQazpwX"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>An endorsable document is a specific type of document whose ownership can be transferred from one person or party to another. Some examples are promissory notes (pagarés), titles (títulos), or invoices (facturas).</p>
+
+<p>You can know if a document is endorsable by checking the <b>tracked</b> parameter. It will be <b>true</b> if a document pertains to this category.</p>
+
+<p>Contains the same information as the <a href="#document">Document Model</a> with the following extra attributes: </p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>tracked</td>
+<td>boolean</td>
+<td>Always set to true for endorsable documents.</td>
+</tr>
+<tr>
+<td>type</td>
+<td>String</td>
+<td>The document type that was specified when the endorsable document was created (currently <b>promissory note</b> is the only supported type)</td>
+</tr>
+<tr>
+<td>transferable</td>
+<td>boolean</td>
+<td>True if the document is able to be endorsed</td>
+</tr>
+<tr>
+<td>asset</td>
+<td>Object</td>
+<td>Information about the asset</td>
+</tr>
+</tbody></table>
+
+<h3 id="asset-object">Asset Object</h3>
+
+<p>The asset object has the following attributes</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>String</td>
+<td>ID of the asset that is assigned to the document</td>
+</tr>
+<tr>
+<td>address</td>
+<td>String</td>
+<td>The cryptocurrency address that holds the endorsable document</td>
 </tr>
 </tbody></table>
 
@@ -499,6 +573,126 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
 </tr>
 </tbody></table>
 
+<h2 id="template">Template</h2>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"446e56c9-6df3-444b-ad2b-c582f1fd0dd0"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NDA"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Confidential disclosure agreement between two parties"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"has_documents"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"header"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The HTML header"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The HTML content"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"footer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The HTML footer"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"csv"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://www.mifiel.com/api/v1/templates/446e56c9-6df3-444b-ad2b-c582f1fd0dd0/generate_populated_csv"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"446e56c9-6df3-444b-ad2b-c582f1fd0dd0"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Pagaré"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Pagaré between two parties"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"has_documents"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"header"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The HTML header"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The HTML content"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"footer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The HTML footer"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"csv"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://www.mifiel.com/api/v1/templates/446e56c9-6df3-444b-ad2b-c582f1fd0dd0/generate_populated_csv"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"tracked"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"promissory-note"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>String</td>
+<td>The ID of the Template</td>
+</tr>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>The name of the Template</td>
+</tr>
+<tr>
+<td>description</td>
+<td>String</td>
+<td>The description</td>
+</tr>
+<tr>
+<td>hash_documents</td>
+<td>Boolean</td>
+<td>Whether the template has documents or not</td>
+</tr>
+<tr>
+<td>header</td>
+<td>Text</td>
+<td>The Header of the template</td>
+</tr>
+<tr>
+<td>content</td>
+<td>Text</td>
+<td>The Content of the template</td>
+</tr>
+<tr>
+<td>footer</td>
+<td>Text</td>
+<td>The Footer of the template</td>
+</tr>
+<tr>
+<td>tracked</td>
+<td>Boolean</td>
+<td>Whether the template is used to create endorsable (tracked) documents or non-endorsable documents</td>
+</tr>
+<tr>
+<td>type</td>
+<td>String</td>
+<td>Type of the template if it is tracked. For now, the only value is &lsquo;promissory-note&rsquo; (pagaré)</td>
+</tr>
+</tbody></table>
+
+<h2 id="signatory">Signatory</h2>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"signatory@email.com"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Signatory Name"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"tax_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AAA010101AAA"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"beneficiary"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>email</td>
+<td>String</td>
+<td>The email of the signatory</td>
+</tr>
+<tr>
+<td>name</td>
+<td>String</td>
+<td><strong>Optional</strong> The name of the signatory</td>
+</tr>
+<tr>
+<td>tax_id</td>
+<td>String</td>
+<td><strong>Optional</strong> The tax_id (RFC) of the signatory</td>
+</tr>
+<tr>
+<td>field</td>
+<td>String</td>
+<td><strong>Optional</strong> The type of signatory.</td>
+</tr>
+</tbody></table>
+
+<p>The <em>field</em> param is required in endorsable documents. For example in a promissory note document (created with params <code class="prettyprint">track: true, type: &#39;promissory-note&#39;</code>) possible values are <strong>beneficiary</strong> and <strong>subscriber</strong> for issuing and <strong>holder</strong> and <strong>receiver</strong> for transfering.</p>
+
           <h1 id="documents">Documents</h1>
 
 <h2 id="create-a-document">Create a Document</h2>
@@ -509,19 +703,18 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
 <pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
 
 <span class="n">document</span> <span class="o">=</span> <span class="no">Mifiel</span><span class="o">::</span><span class="no">Document</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span>
+  <span class="ss">track: </span><span class="kp">true</span><span class="p">,</span> <span class="c1"># for endorsable documents only</span>
+  <span class="ss">type: </span><span class="s1">'promissory-note'</span><span class="p">,</span> <span class="c1"># for endorsable documents only</span>
   <span class="ss">file: </span><span class="s1">'path/to/my-file.pdf'</span><span class="p">,</span>
-  <span class="ss">signatories: </span><span class="p">[</span>
-    <span class="p">{</span> 
-      <span class="ss">name: </span><span class="s1">'Signer 1'</span><span class="p">,</span> 
-      <span class="ss">email: </span><span class="s1">'signer1@email.com'</span><span class="p">,</span> 
-      <span class="ss">tax_id: </span><span class="s1">'AAA010101AAA'</span> 
-    <span class="p">},</span> 
-    <span class="p">{</span> 
-      <span class="ss">name: </span><span class="s1">'Signer 2'</span><span class="p">,</span> 
-      <span class="ss">email: </span><span class="s1">'signer2@email.com'</span><span class="p">,</span> 
-      <span class="ss">tax_id: </span><span class="s1">'AAA010102AAA'</span> 
-    <span class="p">}</span>
-  <span class="p">],</span>
+  <span class="ss">signatories: </span><span class="p">[{</span> 
+    <span class="ss">name: </span><span class="s1">'Signer 1'</span><span class="p">,</span> 
+    <span class="ss">email: </span><span class="s1">'signer1@email.com'</span><span class="p">,</span> 
+    <span class="ss">tax_id: </span><span class="s1">'AAA010101AAA'</span> 
+  <span class="p">},</span> <span class="p">{</span> 
+    <span class="ss">name: </span><span class="s1">'Signer 2'</span><span class="p">,</span> 
+    <span class="ss">email: </span><span class="s1">'signer2@email.com'</span><span class="p">,</span> 
+    <span class="ss">tax_id: </span><span class="s1">'AAA010102AAA'</span> 
+  <span class="p">}],</span>
   <span class="ss">callback_url: </span><span class="s1">'https://www.example.com/webhook/url'</span>
 <span class="p">)</span>
 
@@ -631,13 +824,28 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
 </tr>
 <tr>
 <td>signatories</td>
-<td>Array</td>
-<td>A list containing the <strong>name</strong>, <strong>tax_id</strong> (RFC) and <strong>email</strong> of each <strong>signer</strong></td>
+<td>Array[Signatory]</td>
+<td>A list of <a href="#signatory">Signatory Object</a></td>
 </tr>
 <tr>
 <td>callback_url</td>
 <td>String</td>
 <td><strong>Optional</strong> A Callback URL to post when the document gets signed</td>
+</tr>
+<tr>
+<td>external_id</td>
+<td>String</td>
+<td><strong>Optional</strong> A unique id for you to identify the document in the response or fetch it</td>
+</tr>
+<tr>
+<td>track</td>
+<td>Boolean</td>
+<td><strong>Optional</strong> true if you want your document to be andorsable.</td>
+</tr>
+<tr>
+<td>type</td>
+<td>String</td>
+<td><strong>Optional</strong> (Required if param track is true) For now, the only value is &lsquo;promissory-note&rsquo; (pagaré)</td>
 </tr>
 </tbody></table>
 
@@ -646,6 +854,10 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
     <li>Either the <b>file</b> or <b>original_hash</b> must be passed.</li>
     <li>The <b>email</b> in the <b>signatories</b> param is <b>required</b> when using embedded signing.</li>
   </ul>
+</aside>
+
+<aside class="info">
+  If you want the generated documents to be endorsables you must pass the attribute <b>track: true</b> and the type of endorsable <b>type: 'promissory-note&rsquo;</b>. Right now we only have <i>promissory-note</i> but we plan to add more in the future.
 </aside>
 
 <h3 id="response">Response</h3>
@@ -815,6 +1027,207 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
 </tr>
 </tbody></table>
 
+<h2 id="transfer-a-document">Transfer a document</h2>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
+
+<span class="n">document</span> <span class="o">=</span> <span class="no">Mifiel</span><span class="o">::</span><span class="no">Document</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="s1">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">)</span>
+
+<span class="c1"># For promissory-note the call is very simple</span>
+<span class="n">document</span><span class="p">.</span><span class="nf">transfer</span><span class="p">(</span>
+  <span class="ss">callback_url: </span><span class="s1">'https://www.example.com/webhook/url'</span><span class="p">,</span>
+  <span class="ss">receiver: </span><span class="s1">'receiver@email.com'</span><span class="p">,</span> <span class="c1"># simple</span>
+  <span class="ss">receiver: </span><span class="p">{</span> <span class="c1"># if you want to ensure that the receiver has a specific tax_id (RFC)</span>
+    <span class="ss">name: </span><span class="s1">'Receiver'</span><span class="p">,</span>
+    <span class="ss">email: </span><span class="s1">'receiver@email.com'</span><span class="p">,</span>
+    <span class="ss">tax_id: </span><span class="s1">'AAA010102AAA'</span>
+  <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c1"># Or for a specific endorsable document type</span>
+<span class="n">document</span><span class="p">.</span><span class="nf">transfer</span><span class="p">(</span>
+  <span class="ss">file: </span><span class="s1">'path/to/my-transfer-file.pdf'</span><span class="p">,</span> <span class="c1"># required in certain endorsable document types</span>
+  <span class="ss">callback_url: </span><span class="s1">'https://www.example.com/webhook/url'</span><span class="p">,</span>
+  <span class="ss">signatories: </span><span class="p">[{</span>
+    <span class="ss">name: </span><span class="s1">'Issuer'</span><span class="p">,</span>
+    <span class="ss">email: </span><span class="s1">'issuer@email.com'</span><span class="p">,</span>
+    <span class="ss">tax_id: </span><span class="s1">'AAA010101AAA'</span><span class="p">,</span>
+    <span class="ss">field: </span><span class="s1">'issuer'</span> <span class="c1"># Could change depending on the endorsable document type</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="ss">name: </span><span class="s1">'Receiver'</span><span class="p">,</span>
+    <span class="ss">email: </span><span class="s1">'receiver@email.com'</span><span class="p">,</span>
+    <span class="ss">tax_id: </span><span class="s1">'AAA010102AAA'</span><span class="p">,</span>
+    <span class="ss">field: </span><span class="s1">'receiver'</span> <span class="c1"># Could change depending on the endorsable document type</span>
+  <span class="p">}]</span>
+<span class="p">)</span>
+
+<span class="c1"># Transfer using a template</span>
+<span class="n">document</span><span class="p">.</span><span class="nf">transfer</span><span class="p">(</span>
+  <span class="p">.</span><span class="nf">.</span><span class="p">.</span>
+  <span class="nf">template_id</span><span class="p">:</span> <span class="s1">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">,</span>
+  <span class="ss">fields: </span><span class="p">{</span>
+    <span class="ss">name: </span><span class="s1">'My Client Name'</span><span class="p">,</span>
+    <span class="ss">date: </span><span class="s1">'27 Sep 2017'</span>
+  <span class="p">}</span>
+  <span class="p">.</span><span class="nf">.</span><span class="o">.</span>
+<span class="p">)</span>
+</code></pre>
+<pre class="highlight shell"><code>curl -X POST https://www.mifiel.com/api/v1/documents/29f3cb01-744d-4eae-8718-213aec8a1678/transfer <span class="se">\</span>
+  -F <span class="s2">"file=@my-file.pdf"</span> <span class="se">\</span>
+  -F <span class="s2">"signatories[0][name]=Issuer"</span> <span class="se">\</span>
+  -F <span class="s2">"signatories[0][email]=issuer@email.com"</span> <span class="se">\</span>
+  -F <span class="s2">"signatories[0][field]=issuer"</span> <span class="se">\</span>
+  -F <span class="s2">"signatories[1][name]=Receiver"</span> <span class="se">\</span>
+  -F <span class="s2">"signatories[1][email]=receiver@email.com"</span> <span class="se">\</span>
+  -F <span class="s2">"signatories[1][field]=receiver"</span> <span class="se">\</span>
+  -F <span class="s2">"callback_url=https://www.example.com/webhook/url"</span> <span class="se">\</span>
+  -H <span class="s2">"Authorization: APIAuth APP-ID:hmac-signature"</span>
+</code></pre>
+<pre class="highlight php"><code><span class="cp">&lt;?php</span>
+<span class="k">require</span> <span class="s1">'vendor/autoload.php'</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Mifiel\Document</span><span class="p">;</span>
+
+<span class="nv">$document</span> <span class="o">=</span> <span class="nx">Document</span><span class="o">::</span><span class="na">find</span><span class="p">(</span><span class="s1">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">);</span>
+<span class="c1"># For promissory-note the call is very simple
+</span><span class="nv">$document</span><span class="o">-&gt;</span><span class="na">transfer</span><span class="p">([</span>
+  <span class="s1">'callback_url'</span><span class="o">:</span> <span class="s1">'https://www.example.com/webhook/url'</span><span class="p">,</span>
+  <span class="s1">'receiver'</span><span class="o">:</span> <span class="s1">'receiver@email.com'</span><span class="p">,</span> <span class="c1"># simple
+</span>  <span class="s1">'receiver'</span><span class="o">:</span> <span class="p">[</span> <span class="c1"># if you want to ensure that the receiver has a specific tax_id (RFC)
+</span>    <span class="s1">'name'</span><span class="o">:</span> <span class="s1">'Receiver'</span><span class="p">,</span>
+    <span class="s1">'email'</span><span class="o">:</span> <span class="s1">'receiver@email.com'</span><span class="p">,</span>
+    <span class="s1">'tax_id'</span><span class="o">:</span> <span class="s1">'AAA010102AAA'</span>
+  <span class="p">]</span>
+<span class="p">])</span>
+
+<span class="c1"># Or for a specific endorsable document type
+</span><span class="nv">$document</span><span class="o">.</span><span class="nx">transfer</span><span class="p">(</span>
+  <span class="s1">'file'</span><span class="o">:</span> <span class="s1">'path/to/my-transfer-file.pdf'</span><span class="p">,</span> <span class="c1"># required in certain endorsable document types
+</span>  <span class="s1">'callback_url'</span><span class="o">:</span> <span class="s1">'https://www.example.com/webhook/url'</span><span class="p">,</span>
+  <span class="s1">'signatories'</span><span class="o">:</span> <span class="p">[[</span>
+    <span class="s1">'name'</span><span class="o">:</span> <span class="s1">'Issuer'</span><span class="p">,</span>
+    <span class="s1">'email'</span><span class="o">:</span> <span class="s1">'issuer@email.com'</span><span class="p">,</span>
+    <span class="s1">'tax_id'</span><span class="o">:</span> <span class="s1">'AAA010101AAA'</span><span class="p">,</span>
+    <span class="s1">'field'</span><span class="o">:</span> <span class="s1">'issuer'</span> <span class="c1"># Could change depending on the endorsable document type
+</span>  <span class="p">],</span> <span class="p">[</span>
+    <span class="s1">'name'</span><span class="o">:</span> <span class="s1">'Receiver'</span><span class="p">,</span>
+    <span class="s1">'email'</span><span class="o">:</span> <span class="s1">'receiver@email.com'</span><span class="p">,</span>
+    <span class="s1">'tax_id'</span><span class="o">:</span> <span class="s1">'AAA010102AAA'</span><span class="p">,</span>
+    <span class="s1">'field'</span><span class="o">:</span> <span class="s1">'receiver'</span> <span class="c1"># Could change depending on the endorsable document type
+</span>  <span class="p">]]</span>
+<span class="p">)</span>
+
+<span class="c1"># Transfer using a template
+</span><span class="nv">$document</span><span class="o">.</span><span class="nx">transfer</span><span class="p">([</span>
+  <span class="c1"># ...
+</span>  <span class="s1">'template_id'</span><span class="o">:</span> <span class="s1">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">,</span>
+  <span class="s1">'fields'</span><span class="o">:</span> <span class="p">[</span>
+    <span class="s1">'name'</span><span class="o">:</span> <span class="s1">'My Client Name'</span><span class="p">,</span>
+    <span class="s1">'date'</span><span class="o">:</span> <span class="s1">'27 Sep 2017'</span>
+  <span class="p">]</span>
+  <span class="c1"># ...
+</span><span class="p">])</span>
+<span class="cp">?&gt;</span>
+</code></pre>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">mifiel</span> <span class="kn">import</span> <span class="n">Document</span><span class="p">,</span> <span class="n">Client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="s">'APP_ID'</span><span class="p">,</span> <span class="n">secret_key</span><span class="o">=</span><span class="s">'APP_SECRET'</span><span class="p">)</span>
+
+<span class="n">document</span> <span class="o">=</span> <span class="n">Document</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">)</span>
+<span class="c"># For promissory-note the call is very simple</span>
+<span class="n">document</span><span class="o">.</span><span class="n">transfer</span><span class="p">(</span>
+  <span class="s">'callback_url'</span><span class="p">:</span> <span class="s">'https://www.example.com/webhook/url'</span><span class="p">,</span>
+  <span class="s">'receiver'</span><span class="p">:</span> <span class="s">'receiver@email.com'</span><span class="p">,</span> <span class="c"># simple</span>
+  <span class="s">'receiver'</span><span class="p">:</span> <span class="p">{</span> <span class="c"># if you want to ensure that the receiver has a specific tax_id (RFC)</span>
+    <span class="s">'name'</span><span class="p">:</span> <span class="s">'Receiver'</span><span class="p">,</span>
+    <span class="s">'email'</span><span class="p">:</span> <span class="s">'receiver@email.com'</span><span class="p">,</span>
+    <span class="s">'tax_id'</span><span class="p">:</span> <span class="s">'AAA010102AAA'</span>
+  <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c"># Or for a specific endorsable document type</span>
+<span class="n">document</span><span class="o">.</span><span class="n">transfer</span><span class="p">(</span>
+  <span class="s">'file'</span><span class="p">:</span> <span class="s">'path/to/my-transfer-file.pdf'</span><span class="p">,</span> <span class="c"># required in certain endorsable document types</span>
+  <span class="s">'callback_url'</span><span class="p">:</span> <span class="s">'https://www.example.com/webhook/url'</span><span class="p">,</span>
+  <span class="s">'signatories'</span><span class="p">:</span> <span class="p">[{</span>
+    <span class="s">'name'</span><span class="p">:</span> <span class="s">'Issuer'</span><span class="p">,</span>
+    <span class="s">'email'</span><span class="p">:</span> <span class="s">'issuer@email.com'</span><span class="p">,</span>
+    <span class="s">'tax_id'</span><span class="p">:</span> <span class="s">'AAA010101AAA'</span><span class="p">,</span>
+    <span class="s">'field'</span><span class="p">:</span> <span class="s">'issuer'</span> <span class="c"># Could change depending on the endorsable document type</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="s">'name'</span><span class="p">:</span> <span class="s">'Receiver'</span><span class="p">,</span>
+    <span class="s">'email'</span><span class="p">:</span> <span class="s">'receiver@email.com'</span><span class="p">,</span>
+    <span class="s">'tax_id'</span><span class="p">:</span> <span class="s">'AAA010102AAA'</span><span class="p">,</span>
+    <span class="s">'field'</span><span class="p">:</span> <span class="s">'receiver'</span> <span class="c"># Could change depending on the endorsable document type</span>
+  <span class="p">}]</span>
+<span class="p">)</span>
+
+<span class="c"># Transfer using a template</span>
+<span class="n">document</span><span class="o">.</span><span class="n">transfer</span><span class="p">(</span>
+  <span class="c"># ...</span>
+  <span class="s">'template_id'</span><span class="p">:</span> <span class="s">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">,</span>
+  <span class="s">'fields'</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">'name'</span><span class="p">:</span> <span class="s">'My Client Name'</span><span class="p">,</span>
+    <span class="s">'date'</span><span class="p">:</span> <span class="s">'27 Sep 2017'</span>
+  <span class="p">}</span>
+  <span class="c"># ...</span>
+<span class="p">)</span>
+</code></pre>
+
+<p>Endorsable documents (created with <code class="prettyprint">track: true</code> param) can be transferred to other users. To do this, the receiver must have an account in <a href="www.mifiel.com">Mifiel</a> and must have set up their account to be able to receive endorsable documents.</p>
+
+<p>A transfer document is a page that is annexed to the original document that contains the terms of the agreement to endorse the document. It is signed by the owner (as well as the receiver in some cases) to acknowledge that the ownership of the document has been transferred. Mifiel generates a transfer document by default at the time of endorsement, but if you would like to use your own custom text and design, please contact us.</p>
+
+<p>In the case that the receiver account is not configured, we will return an error and send an email requiring him to do so. When the receiver configures his account we will send a notification to the callback_url provided so your system knows when to retry the call again.</p>
+
+<p>Use this endpoint to transfer an endorsable document.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">POST https://www.mifiel.com/api/v1/documents/:id/transfer</code></p>
+
+<h3 id="parameters">Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>callback_url</td>
+<td>String</td>
+<td><strong>Optional</strong> A Callback URL to post when the document gets signed</td>
+</tr>
+<tr>
+<td>receiver</td>
+<td>String(email) OR Hash</td>
+<td><strong>Optional</strong> Receiver info, it could be an email or a hash containing <strong>name</strong>, <strong>tax_id</strong> (RFC) and <strong>email</strong>.</td>
+</tr>
+<tr>
+<td>file</td>
+<td>File</td>
+<td><strong>Optional</strong> The Transfer File. Depending on the endorsable document type, it could be required.</td>
+</tr>
+<tr>
+<td>signatories</td>
+<td>Array[Signatory]</td>
+<td><strong>Optional</strong> A list of <a href="#signatory">Signatory Object</a></td>
+</tr>
+<tr>
+<td>template_id</td>
+<td>String</td>
+<td><strong>Optional</strong> The template id that you want to use to create the File.</td>
+</tr>
+<tr>
+<td>fields</td>
+<td>JSON [Hash]</td>
+<td><strong>Optional</strong> A hash with the fields <code class="prettyprint">{name: value}</code></td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>Returns a <a href="#tracked-document">Tracked Document Model</a></p>
+
           <h1 id="certificates">Certificates</h1>
 
 <p>At the moment we only support signing with the FIEL (the most frequently used advanced electronic signature in Mexico). We will  soon be adding support for additional types of electronic signatures and will update the documentation as we do so.</p>
@@ -952,6 +1365,677 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
 <h3 id="http-request">HTTP Request</h3>
 
 <p><code class="prettyprint">DELETE https://www.mifiel.com/api/v1/keys/:id</code></p>
+
+          <h1 id="templates">Templates</h1>
+
+<h2 id="create-a-template">Create a Template</h2>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
+
+<span class="n">content</span> <span class="o">=</span> <span class="s1">'&lt;div&gt;'</span> <span class="p">\</span>
+            <span class="s1">'Name &lt;field name="name" type="text"&gt;NAME&lt;/field&gt;'</span> <span class="p">\</span>
+            <span class="s1">'Date &lt;field name="date" type="text"&gt;DATE&lt;/field&gt;'</span> <span class="p">\</span>
+          <span class="s1">'&lt;/div&gt;'</span>
+
+<span class="n">template</span> <span class="o">=</span> <span class="no">Mifiel</span><span class="o">::</span><span class="no">Template</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span>
+  <span class="ss">name: </span><span class="s1">'my-company-nda'</span><span class="p">,</span> 
+  <span class="ss">description: </span><span class="s1">'Confidential disclosure agreement'</span><span class="p">,</span>
+  <span class="ss">header: </span><span class="s1">'&lt;div&gt;some header html&lt;/div&gt;'</span><span class="p">,</span> 
+  <span class="ss">content: </span><span class="n">content</span><span class="p">,</span> 
+  <span class="ss">footer: </span><span class="s1">'&lt;div&gt;some footer html&lt;/div&gt;'</span>
+<span class="p">)</span>
+</code></pre>
+<pre class="highlight shell"><code>curl -X POST https://www.mifiel.com/api/v1/templates <span class="se">\</span>
+  -F <span class="s2">"name=my-company-nda"</span> <span class="se">\</span>
+  -F <span class="s2">"description=Confidential disclosure agreement"</span> <span class="se">\</span>
+  -F <span class="s2">"content=&lt;div&gt;html content&lt;/div&gt;"</span> <span class="se">\</span>
+  -H <span class="s2">"Authorization: APIAuth APP-ID:hmac-signature"</span>
+</code></pre>
+<pre class="highlight php"><code><span class="cp">&lt;?php</span>
+<span class="k">require</span> <span class="s1">'vendor/autoload.php'</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Mifiel\Template</span><span class="p">;</span>
+
+<span class="nv">$content</span> <span class="o">=</span> <span class="s1">'&lt;div&gt;'</span> <span class="o">.</span>
+             <span class="s1">'Name &lt;field name="name" type="text"&gt;NAME&lt;/field&gt;'</span> <span class="o">.</span>
+             <span class="s1">'Date &lt;field name="date" type="text"&gt;DATE&lt;/field&gt;'</span> <span class="o">.</span>
+           <span class="s1">'&lt;/div&gt;'</span>
+
+<span class="nv">$template</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Template</span><span class="p">([</span>
+  <span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'my-company-nda'</span><span class="p">,</span> 
+  <span class="s1">'description'</span> <span class="o">=&gt;</span> <span class="s1">'Confidential disclosure agreement'</span><span class="p">,</span>
+  <span class="s1">'header'</span> <span class="o">=&gt;</span> <span class="s1">'&lt;div&gt;some header html&lt;/div&gt;'</span><span class="p">,</span> 
+  <span class="s1">'content'</span> <span class="o">=&gt;</span> <span class="nv">$content</span><span class="p">,</span> 
+  <span class="s1">'footer'</span> <span class="o">=&gt;</span> <span class="s1">'&lt;div&gt;some footer html&lt;/div&gt;'</span>
+<span class="p">]);</span>
+<span class="nv">$template</span><span class="o">-&gt;</span><span class="na">save</span><span class="p">();</span>
+<span class="cp">?&gt;</span>
+</code></pre>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">mifiel</span> <span class="kn">import</span> <span class="n">Template</span><span class="p">,</span> <span class="n">Client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="s">'APP_ID'</span><span class="p">,</span> <span class="n">secret_key</span><span class="o">=</span><span class="s">'APP_SECRET'</span><span class="p">)</span>
+
+<span class="n">content</span> <span class="o">=</span> <span class="s">'&lt;div&gt;'</span> <span class="o">+</span>
+             <span class="s">'Name &lt;field name="name" type="text"&gt;NAME&lt;/field&gt;'</span> <span class="o">+</span>
+             <span class="s">'Date &lt;field name="date" type="text"&gt;DATE&lt;/field&gt;'</span> <span class="o">+</span>
+           <span class="s">'&lt;/div&gt;'</span>
+<span class="n">template</span> <span class="o">=</span> <span class="n">Template</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+  <span class="n">client</span><span class="o">=</span><span class="n">client</span><span class="p">,</span>
+  <span class="n">name</span><span class="o">=</span><span class="s">'my-company-nda'</span><span class="p">,</span> 
+  <span class="n">description</span><span class="o">=</span><span class="s">'Confidential disclosure agreement'</span><span class="p">,</span>
+  <span class="n">header</span><span class="o">=</span><span class="s">'&lt;div&gt;some header html&lt;/div&gt;'</span><span class="p">,</span> 
+  <span class="n">content</span><span class="o">=</span><span class="n">content</span><span class="p">,</span> 
+  <span class="n">footer</span><span class="o">=</span><span class="s">'&lt;div&gt;some footer html&lt;/div&gt;'</span>
+<span class="p">)</span>
+</code></pre>
+
+<p>Templates are a tool that allows you to create templates that have a base format. You can define fields within the html so you can then create a custumized document.</p>
+
+<aside class="info">
+  If you want the documents generated from the template to be endorsable, you must pass the attribute <b>track: true</b> and specify the type of endorsable document you&rsquo;d like it to be. At the moment the only type available is promissory notes (pagarés), which you can specify by passing the attribute <b>type: &lsquo;promissory-note&rsquo;</b>.
+</aside>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">POST https://www.mifiel.com/api/v1/templates</code></p>
+
+<h3 id="parameters">Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>track</td>
+<td>Boolean</td>
+<td><strong>Optional</strong> true if you want documents generated from this template to be endorsable</td>
+</tr>
+<tr>
+<td>type</td>
+<td>String</td>
+<td><strong>Optional</strong> (Required if param track is true) For now, the only value is &#39;promissory-note&rsquo; (pagaré)</td>
+</tr>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>The name of the template</td>
+</tr>
+<tr>
+<td>description</td>
+<td>String</td>
+<td><strong>Optional</strong> Internal description of your template</td>
+</tr>
+<tr>
+<td>header</td>
+<td>Text/HTML</td>
+<td><strong>Optional</strong> The Header of the PDF</td>
+</tr>
+<tr>
+<td>content</td>
+<td>Text/HTML</td>
+<td>The Content of the PDF</td>
+</tr>
+<tr>
+<td>footer</td>
+<td>Text/HTML</td>
+<td><strong>Optional</strong> The footer of the PDF</td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>Returns a <a href="#template">Template Model</a></p>
+
+<h2 id="get-a-specific-template">Get a Specific Template</h2>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
+
+<span class="n">template</span> <span class="o">=</span> <span class="no">Mifiel</span><span class="o">::</span><span class="no">Template</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="s1">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">)</span>
+<span class="n">template</span><span class="p">.</span><span class="nf">name</span>
+<span class="n">template</span><span class="p">.</span><span class="nf">header</span>
+<span class="n">template</span><span class="p">.</span><span class="nf">content</span>
+<span class="c1"># ...</span>
+</code></pre>
+<pre class="highlight shell"><code>curl <span class="s2">"https://www.mfiel.com.mx/api/v1/templates/29f3cb01-744d-4eae-8718-213aec8a1678"</span>
+  -H <span class="s2">"Authorization: APIAuth APP-ID:hmac-signature"</span>
+</code></pre>
+<pre class="highlight php"><code><span class="cp">&lt;?php</span>
+<span class="k">require</span> <span class="s1">'vendor/autoload.php'</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Mifiel\Template</span><span class="p">;</span>
+
+<span class="nv">$template</span> <span class="o">=</span> <span class="nx">Template</span><span class="o">::</span><span class="na">find</span><span class="p">(</span><span class="s1">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">);</span>
+<span class="nv">$template</span><span class="o">-&gt;</span><span class="na">name</span><span class="p">;</span>
+<span class="nv">$template</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">;</span>
+<span class="nv">$template</span><span class="o">-&gt;</span><span class="na">content</span><span class="p">;</span>
+<span class="c1"># ...
+</span><span class="cp">?&gt;</span>
+</code></pre>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">mifiel</span> <span class="kn">import</span> <span class="n">Template</span><span class="p">,</span> <span class="n">Client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="s">'APP_ID'</span><span class="p">,</span> <span class="n">secret_key</span><span class="o">=</span><span class="s">'APP_SECRET'</span><span class="p">)</span>
+
+<span class="n">template</span> <span class="o">=</span> <span class="n">Template</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s">'id'</span><span class="p">)</span>
+<span class="n">template</span><span class="o">.</span><span class="n">name</span>
+<span class="n">template</span><span class="o">.</span><span class="n">header</span>
+<span class="n">template</span><span class="o">.</span><span class="n">content</span>
+<span class="c"># ...</span>
+</code></pre>
+
+<p>Allows you to retrieve a specific template.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET https://www.mifiel.com/api/v1/templates/:id</code></p>
+
+<h3 id="response">Response</h3>
+
+<p>Returns a <a href="#template">Template Model</a></p>
+
+<h2 id="get-all-templates">Get All Templates</h2>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
+
+<span class="n">templates</span> <span class="o">=</span> <span class="no">Mifiel</span><span class="o">::</span><span class="no">Template</span><span class="p">.</span><span class="nf">all</span>
+</code></pre>
+<pre class="highlight shell"><code>curl <span class="s2">"https://www.mifiel.com/api/v1/templates"</span>
+  -H <span class="s2">"Authorization: APIAuth APP-ID:hmac-signature"</span>
+</code></pre>
+<pre class="highlight php"><code><span class="cp">&lt;?php</span>
+<span class="k">require</span> <span class="s1">'vendor/autoload.php'</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Mifiel\Template</span><span class="p">;</span>
+
+<span class="nv">$templates</span> <span class="o">=</span> <span class="nx">Template</span><span class="o">::</span><span class="na">all</span><span class="p">();</span>
+<span class="cp">?&gt;</span>
+</code></pre>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">mifiel</span> <span class="kn">import</span> <span class="n">Template</span><span class="p">,</span> <span class="n">Client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="s">'APP_ID'</span><span class="p">,</span> <span class="n">secret_key</span><span class="o">=</span><span class="s">'APP_SECRET'</span><span class="p">)</span>
+
+<span class="n">templates</span> <span class="o">=</span> <span class="n">Template</span><span class="o">.</span><span class="nb">all</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+</code></pre>
+
+<p>Allows you to retrieve all templates in your account.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET https://www.mifiel.com/api/v1/templates</code></p>
+
+<h3 id="response">Response</h3>
+
+<p>Returns an Array of <a href="#template">Template Models</a></p>
+
+<h2 id="delete-a-template">Delete a Template</h2>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
+
+<span class="no">Mifiel</span><span class="o">::</span><span class="no">Template</span><span class="p">.</span><span class="nf">delete</span><span class="p">(</span><span class="s1">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">)</span>
+</code></pre>
+<pre class="highlight shell"><code>curl -X DELETE <span class="s2">"https://www.mifiel.com/api/v1/templates/29f3cb01-744d-4eae-8718-213aec8a1678"</span>
+  -H <span class="s2">"Authorization: APIAuth APP-ID:hmac-signature"</span>
+</code></pre>
+<pre class="highlight php"><code><span class="cp">&lt;?php</span>
+<span class="k">require</span> <span class="s1">'vendor/autoload.php'</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Mifiel\Template</span><span class="p">;</span>
+
+<span class="nx">Template</span><span class="o">::</span><span class="na">delete</span><span class="p">(</span><span class="s1">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">);</span>
+<span class="cp">?&gt;</span>
+</code></pre>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">mifiel</span> <span class="kn">import</span> <span class="n">Template</span><span class="p">,</span> <span class="n">Client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="s">'APP_ID'</span><span class="p">,</span> <span class="n">secret_key</span><span class="o">=</span><span class="s">'APP_SECRET'</span><span class="p">)</span>
+
+<span class="n">Template</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">)</span>
+</code></pre>
+
+<p>Allows you to delete a specific template in your account.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">DELETE https://www.mifiel.com/api/v1/templates/:id</code></p>
+
+<h2 id="template-fields">Template fields</h2>
+
+<p>Get the fields of a specific template. Use it to know what to send to generate documents with this template.</p>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
+
+<span class="n">fields</span> <span class="o">=</span> <span class="no">Mifiel</span><span class="o">::</span><span class="no">Template</span><span class="p">.</span><span class="nf">fields</span><span class="p">(</span><span class="s1">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">)</span>
+</code></pre>
+<pre class="highlight shell"><code>curl <span class="s2">"https://www.mifiel.com/api/v1/templates/29f3cb01-744d-4eae-8718-213aec8a1678/fields"</span> <span class="se">\</span>
+  -H <span class="s2">"Authorization: APIAuth APP-ID:hmac-signature"</span>
+</code></pre>
+<pre class="highlight php"><code><span class="cp">&lt;?php</span>
+<span class="k">require</span> <span class="s1">'vendor/autoload.php'</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Mifiel\Template</span><span class="p">;</span>
+
+<span class="nx">Template</span><span class="o">::</span><span class="na">fields</span><span class="p">(</span><span class="s1">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">);</span>
+<span class="cp">?&gt;</span>
+</code></pre>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">mifiel</span> <span class="kn">import</span> <span class="n">Template</span><span class="p">,</span> <span class="n">Client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="s">'APP_ID'</span><span class="p">,</span> <span class="n">secret_key</span><span class="o">=</span><span class="s">'APP_SECRET'</span><span class="p">)</span>
+
+<span class="n">fields</span> <span class="o">=</span> <span class="n">Template</span><span class="o">.</span><span class="n">fields</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">)</span>
+</code></pre>
+
+<blockquote>
+<p>Response from Mifiel:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">[{</span><span class="w">
+  </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w"> 
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"name"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Miguel Rodriguez"</span><span class="w"> 
+</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w"> 
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"15/8/2018"</span><span class="w">
+</span><span class="p">}]</span><span class="w">
+</span></code></pre>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET https://www.mifiel.com/api/v1/templates/:id/fields</code></p>
+
+<h3 id="response">Response</h3>
+
+<p>Returns an array of the template fields (parsed from the HTML) where each field has the following information:</p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>type</td>
+<td>String</td>
+<td>HTML type attribute of the field</td>
+</tr>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>HTML name attribute of the field</td>
+</tr>
+<tr>
+<td>value</td>
+<td>String</td>
+<td>Value which was placed between the field tag in the HTML</td>
+</tr>
+</tbody></table>
+
+<h2 id="template-documents">Template documents</h2>
+
+<p>Get all the active (non deleted) documents generated from a specific template.</p>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
+
+<span class="n">documents</span> <span class="o">=</span> <span class="no">Mifiel</span><span class="o">::</span><span class="no">Template</span><span class="p">.</span><span class="nf">documents</span><span class="p">(</span><span class="s1">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">)</span>
+<span class="n">document</span> <span class="o">=</span> <span class="n">documents</span><span class="p">.</span><span class="nf">first</span>
+<span class="c1"># Mifiel::Document</span>
+<span class="n">document</span><span class="p">.</span><span class="nf">id</span>
+<span class="c1"># "abcd1234"</span>
+<span class="n">document</span><span class="p">.</span><span class="nf">status</span>
+<span class="c1"># [0, "Pending"]</span>
+</code></pre>
+<pre class="highlight shell"><code>curl <span class="s2">"https://www.mifiel.com/api/v1/templates/29f3cb01-744d-4eae-8718-213aec8a1678/documents"</span> <span class="se">\</span>
+  -H <span class="s2">"Authorization: APIAuth APP-ID:hmac-signature"</span>
+</code></pre>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">mifiel</span> <span class="kn">import</span> <span class="n">Template</span><span class="p">,</span> <span class="n">Client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="s">'APP_ID'</span><span class="p">,</span> <span class="n">secret_key</span><span class="o">=</span><span class="s">'APP_SECRET'</span><span class="p">)</span>
+
+<span class="n">documents</span> <span class="o">=</span> <span class="n">Template</span><span class="o">.</span><span class="n">documents</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="s">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">)</span>
+</code></pre>
+
+<blockquote>
+<p>Response from Mifiel:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">[{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"document-id"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"file_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file-name.pdf"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s2">"Pending"</span><span class="p">],</span><span class="w">
+  </span><span class="nt">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"signer1@email.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jorge Morales"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/api/v1/documents/.../file"</span><span class="w">
+</span><span class="p">}]</span><span class="w">
+</span></code></pre>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET https://www.mifiel.com/api/v1/templates/:id/documents</code></p>
+
+<h3 id="response">Response</h3>
+
+<p>Returns an array with the following information about each document: </p>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>String</td>
+<td>ID of the document</td>
+</tr>
+<tr>
+<td>file_name</td>
+<td>String</td>
+<td>Name of the template file created</td>
+</tr>
+<tr>
+<td>status</td>
+<td>Array</td>
+<td>[code, code_message] <code class="prettyprint">0: not signed, 1: signed</code></td>
+</tr>
+<tr>
+<td>owner</td>
+<td>Object</td>
+<td>The owner of the document. The user who created the document.</td>
+</tr>
+<tr>
+<td>file</td>
+<td>String</td>
+<td>Path where the original document can be downloaded</td>
+</tr>
+</tbody></table>
+
+<h2 id="generate-a-document-from-a-template">Generate a document from a template</h2>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
+
+<span class="n">document</span> <span class="o">=</span> <span class="no">Mifiel</span><span class="o">::</span><span class="no">Document</span><span class="p">.</span><span class="nf">create_from_template</span><span class="p">(</span>
+  <span class="ss">template_id: </span><span class="s1">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">,</span> 
+  <span class="ss">name: </span><span class="s1">'document.pdf'</span><span class="p">,</span>
+  <span class="ss">fields: </span><span class="p">{</span>
+    <span class="ss">name: </span><span class="s1">'My Client Name'</span><span class="p">,</span>
+    <span class="ss">date: </span><span class="s1">'Sep 27 2017'</span>
+  <span class="p">},</span>
+  <span class="ss">signatories: </span><span class="p">[{</span>
+    <span class="ss">name: </span><span class="s1">'Some name'</span><span class="p">,</span>
+    <span class="ss">email: </span><span class="s1">'some@email.com'</span><span class="p">,</span>
+    <span class="ss">tax_id: </span><span class="s1">'AAA010101AAA'</span>
+  <span class="p">}],</span>
+  <span class="ss">callback_url: </span><span class="s1">'https://www.example.com/webhook/url'</span><span class="p">,</span>
+  <span class="ss">external_id: </span><span class="s1">'unique-id'</span>
+<span class="p">)</span>
+
+<span class="c1"># If you already have a Template instance you can also do</span>
+<span class="n">document</span> <span class="o">=</span> <span class="n">template</span><span class="p">.</span><span class="nf">generate_document</span><span class="p">(</span>
+  <span class="ss">name: </span><span class="s1">'document.pdf'</span><span class="p">,</span>
+  <span class="ss">fields: </span><span class="p">{</span> <span class="p">.</span><span class="nf">.</span><span class="o">.</span> <span class="p">},</span>
+  <span class="p">.</span><span class="nf">.</span><span class="o">.</span>
+<span class="p">)</span>
+
+<span class="c1"># document.id</span>
+<span class="c1"># document.original_hash</span>
+<span class="c1"># document.signers</span>
+</code></pre>
+<pre class="highlight shell"><code>curl -X POST <span class="s2">"https://www.mifiel.com/api/v1/templates/29f3cb01-744d-4eae-8718-213aec8a1678/generate_document"</span> <span class="se">\</span>
+  -F <span class="s2">"namme='My Client Name'"</span> <span class="se">\</span>
+  -F <span class="s2">"fields[name]=My Client Name"</span> <span class="se">\</span>
+  -F <span class="s2">"fields[date]=Sep 27 2017"</span> <span class="se">\</span>
+  -F <span class="s2">"signatories[0][name]=Some name"</span> <span class="se">\</span>
+  -F <span class="s2">"signatories[0][email]=some@email.com"</span> <span class="se">\</span>
+  -F <span class="s2">"signatories[0][tax_id]=AAA010101AAA"</span> <span class="se">\</span>
+  -H <span class="s2">"Authorization: APIAuth APP-ID:hmac-signature"</span>
+</code></pre>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">mifiel</span> <span class="kn">import</span> <span class="n">Document</span><span class="p">,</span> <span class="n">Client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="s">'APP_ID'</span><span class="p">,</span> <span class="n">secret_key</span><span class="o">=</span><span class="s">'APP_SECRET'</span><span class="p">)</span>
+
+<span class="n">args</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s">'template_id'</span><span class="p">:</span> <span class="s">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">,</span>
+  <span class="s">'name'</span><span class="p">:</span> <span class="s">'My NDA'</span><span class="p">,</span>
+  <span class="s">'fields'</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s">'name'</span><span class="p">:</span> <span class="s">'My Client Name'</span><span class="p">,</span>
+    <span class="s">'date'</span><span class="p">:</span> <span class="s">'Sep 27 2017'</span>
+  <span class="p">},</span>
+  <span class="s">'signatories'</span><span class="p">:</span> <span class="p">[{</span>
+    <span class="s">'name'</span><span class="p">:</span> <span class="s">'Some name'</span><span class="p">,</span>
+    <span class="s">'email'</span><span class="p">:</span> <span class="s">'some@email.com'</span><span class="p">,</span>
+    <span class="s">'tax_id'</span><span class="p">:</span> <span class="s">'AAA010101AAA'</span>
+  <span class="p">}],</span>
+  <span class="s">'callback_url'</span><span class="p">:</span> <span class="s">'https://www.example.com/webhook/url'</span><span class="p">,</span>
+  <span class="s">'external_id'</span><span class="p">:</span> <span class="s">'unique-id'</span>
+<span class="p">}</span>
+<span class="n">document</span> <span class="o">=</span> <span class="n">Document</span><span class="o">.</span><span class="n">create_from_template</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+</code></pre>
+<pre class="highlight php"><code><span class="cp">&lt;?php</span>
+<span class="k">require</span> <span class="s1">'vendor/autoload.php'</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Mifiel\Document</span><span class="p">;</span>
+
+<span class="nv">$args</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s1">'template_id'</span> <span class="o">=&gt;</span> <span class="s1">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">,</span>
+  <span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'My NDA'</span><span class="p">,</span>
+  <span class="s1">'fields'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+    <span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'My Client Name'</span><span class="p">,</span>
+    <span class="s1">'date'</span> <span class="o">=&gt;</span> <span class="s1">'Sep 27 2017'</span>
+  <span class="p">],</span>
+  <span class="s1">'signatories'</span> <span class="o">=&gt;</span> <span class="p">[[</span>
+    <span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'Some name'</span><span class="p">,</span>
+    <span class="s1">'email'</span> <span class="o">=&gt;</span> <span class="s1">'some@email.com'</span><span class="p">,</span>
+    <span class="s1">'tax_id'</span> <span class="o">=&gt;</span> <span class="s1">'AAA010101AAA'</span>
+  <span class="p">]],</span>
+  <span class="s1">'callback_url'</span> <span class="o">=&gt;</span> <span class="s1">'https://www.example.com/webhook/url'</span><span class="p">,</span>
+  <span class="s1">'external_id'</span> <span class="o">=&gt;</span> <span class="s1">'unique-id'</span>
+<span class="p">]</span>
+
+<span class="nv">$document</span> <span class="o">=</span> <span class="nx">Document</span><span class="o">.</span><span class="nx">create_document</span><span class="p">(</span><span class="nv">$args</span><span class="p">)</span>
+<span class="cp">?&gt;</span>
+</code></pre>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">POST https://www.mifiel.com/api/v1/templates/:id/generate_document</code></p>
+
+<h3 id="parameters">Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>track</td>
+<td>Boolean</td>
+<td><strong>Optional</strong> true if you want your document to be endorsable</td>
+</tr>
+<tr>
+<td>type</td>
+<td>String</td>
+<td><strong>Optional</strong> (Required if param track is true) For now, the only value is &#39;promissory-note&rsquo; (pagaré)</td>
+</tr>
+<tr>
+<td>name</td>
+<td>String</td>
+<td><strong>Optional</strong> The name of the document</td>
+</tr>
+<tr>
+<td>fields</td>
+<td>JSON [Hash]</td>
+<td>A hash with the fields <code class="prettyprint">{name: value}</code></td>
+</tr>
+<tr>
+<td>signatories</td>
+<td>Array[Signatory]</td>
+<td>A list of <a href="#signatory">Signatory Object</a></td>
+</tr>
+<tr>
+<td>callback_url</td>
+<td>String</td>
+<td><strong>Optional</strong> A Callback URL to post when the document gets signed</td>
+</tr>
+<tr>
+<td>external_id</td>
+<td>String</td>
+<td><strong>Optional</strong> A unique id for you to identify the document in the response or fetch it</td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<p>Returns a <a href="#document">Document Model</a></p>
+
+<h2 id="generate-several-documents-from-a-template">Generate several documents from a template</h2>
+<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'mifiel'</span>
+
+<span class="n">args</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="ss">template_id: </span><span class="s1">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">,</span>
+  <span class="ss">identifier: </span><span class="s1">'name'</span><span class="p">,</span>
+  <span class="ss">callback_url: </span><span class="s1">'https://www.my-site.com/documents-ready'</span><span class="p">,</span>
+  <span class="ss">documents: </span><span class="p">[{</span>
+    <span class="ss">fields: </span><span class="p">{</span>
+      <span class="ss">name: </span><span class="s1">'My Client Name'</span><span class="p">,</span>
+      <span class="ss">date: </span><span class="s1">'Sep 27 2017'</span>
+    <span class="p">},</span>
+    <span class="ss">signatories: </span><span class="p">[{</span>
+      <span class="ss">name: </span><span class="s1">'Some Name'</span><span class="p">,</span>
+      <span class="ss">email: </span><span class="s1">'some@email.com'</span><span class="p">,</span>
+      <span class="ss">tax_id: </span><span class="s1">'AAA010101AAA'</span>
+    <span class="p">}],</span>
+    <span class="ss">callback_url: </span><span class="s1">'https://www.my-site.com/sign-webhook'</span><span class="p">,</span>
+    <span class="ss">external_id: </span><span class="s1">'unique-id'</span>
+  <span class="p">}]</span>
+<span class="p">}</span>
+<span class="n">response</span> <span class="o">=</span> <span class="no">Mifiel</span><span class="o">::</span><span class="no">Document</span><span class="p">.</span><span class="nf">create_many_from_template</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+<span class="n">response</span><span class="p">.</span><span class="nf">status</span> <span class="o">==</span> <span class="s1">'success'</span>
+</code></pre>
+<pre class="highlight python"><code><span class="kn">from</span> <span class="nn">mifiel</span> <span class="kn">import</span> <span class="n">Document</span><span class="p">,</span> <span class="n">Client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">app_id</span><span class="o">=</span><span class="s">'APP_ID'</span><span class="p">,</span> <span class="n">secret_key</span><span class="o">=</span><span class="s">'APP_SECRET'</span><span class="p">)</span>
+
+<span class="n">args</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s">'template_id'</span><span class="p">:</span> <span class="s">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">,</span>
+  <span class="s">'identifier'</span><span class="p">:</span> <span class="s">'name'</span><span class="p">,</span>
+  <span class="s">'callback_url'</span><span class="p">:</span> <span class="s">'https://www.my-site.com/documents-ready'</span><span class="p">,</span>
+  <span class="s">'documents'</span><span class="p">:</span> <span class="p">[{</span>
+    <span class="s">'fields'</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s">'name'</span><span class="p">:</span> <span class="s">'My Client Name'</span><span class="p">,</span>
+      <span class="s">'date'</span><span class="p">:</span> <span class="s">'Sep 27 2017'</span>
+    <span class="p">},</span>
+    <span class="s">'signatories'</span><span class="p">:</span> <span class="p">[{</span>
+      <span class="s">'name'</span><span class="p">:</span> <span class="s">'Some Name'</span><span class="p">,</span>
+      <span class="s">'email'</span><span class="p">:</span> <span class="s">'some@email.com'</span><span class="p">,</span>
+      <span class="s">'tax_id'</span><span class="p">:</span> <span class="s">'AAA010101AAA'</span>
+    <span class="p">}],</span>
+    <span class="s">'callback_url'</span><span class="p">:</span> <span class="s">'https://www.my-site.com/sign-webhook'</span><span class="p">,</span>
+    <span class="s">'external_id'</span><span class="p">:</span> <span class="s">'unique-id'</span>
+  <span class="p">}]</span>
+<span class="p">}</span>
+<span class="n">documents</span> <span class="o">=</span> <span class="n">Document</span><span class="o">.</span><span class="n">create_many_from_template</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">template_id</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">docs</span><span class="p">)</span>
+</code></pre>
+<pre class="highlight php"><code><span class="cp">&lt;?php</span>
+<span class="k">require</span> <span class="s1">'vendor/autoload.php'</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Mifiel\Document</span><span class="p">;</span>
+
+<span class="nv">$args</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s1">'template_id'</span> <span class="o">=&gt;</span> <span class="s1">'29f3cb01-744d-4eae-8718-213aec8a1678'</span><span class="p">,</span>
+  <span class="s1">'identifier'</span> <span class="o">=&gt;</span> <span class="s1">'name'</span><span class="p">,</span>
+  <span class="s1">'callback_url'</span> <span class="o">=&gt;</span> <span class="s1">'https://www.my-site.com/documents-ready'</span><span class="p">,</span>
+  <span class="s1">'documents'</span> <span class="o">=&gt;</span> <span class="p">[{</span>
+    <span class="s1">'fields'</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'My Client Name'</span><span class="p">,</span>
+      <span class="s1">'date'</span> <span class="o">=&gt;</span> <span class="s1">'Sep 27 2017'</span>
+    <span class="p">},</span>
+    <span class="s1">'signatories'</span> <span class="o">=&gt;</span> <span class="p">[{</span>
+      <span class="s1">'name'</span> <span class="o">=&gt;</span> <span class="s1">'Some Name'</span><span class="p">,</span>
+      <span class="s1">'email'</span> <span class="o">=&gt;</span> <span class="s1">'some@email.com'</span><span class="p">,</span>
+      <span class="s1">'tax_id'</span> <span class="o">=&gt;</span> <span class="s1">'AAA010101AAA'</span>
+    <span class="p">}],</span>
+    <span class="s1">'callback_url'</span> <span class="o">=&gt;</span> <span class="s1">'https://www.my-site.com/sign-webhook'</span><span class="p">,</span>
+    <span class="s1">'external_id'</span> <span class="o">=&gt;</span> <span class="s1">'unique-id'</span>
+  <span class="p">}]</span>
+<span class="p">]</span>
+<span class="nv">$documents</span> <span class="o">=</span> <span class="nx">Document</span><span class="o">.</span><span class="nx">create_many_from_template</span><span class="p">(</span><span class="nv">$args</span><span class="p">)</span>
+<span class="cp">?&gt;</span>
+</code></pre>
+
+<p>The generation of documents runs in the background. We will respond with 200 (OK) and start generating the documents. When our servers finish, we will POST you to the provided <code class="prettyprint">callback_url</code> with a list of the created documents.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">POST https://www.mifiel.com/api/v1/templates/:id/generate_documents</code></p>
+
+<blockquote>
+<p>Response from Mifiel:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w"> </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<blockquote>
+<p>When the documents are ready, we will send you a POST to the <strong>callback_url</strong> with the following params:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">[{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"d6793b57-9101-4ce3-ae0d-e51868f3fdf9"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"folio"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{asset_id}|{address}"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"signers"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Some Name"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"some@email.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"tax_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AAA010101AAA"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"widget_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"d6793b57-9101-4ce3-ae0d-e51868f3fdf9"</span><span class="w">
+  </span><span class="p">}],</span><span class="w">
+  </span><span class="nt">"file_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NDA-My-Client-Name.pdf"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"callback_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://www.my-site.com/webhook"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"external_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unique-id"</span><span class="w">
+</span><span class="p">}]</span><span class="w">
+</span></code></pre>
+
+<h3 id="parameters">Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>identifier</td>
+<td>String</td>
+<td><strong>Optional</strong> A field name to use in the document name e.g &ldquo;name&rdquo; will append the field &ldquo;name&rdquo; to the document name &ldquo;My-NDA-My-Client-Name.pdf&rdquo;</td>
+</tr>
+<tr>
+<td>callback_url</td>
+<td>String</td>
+<td>A Callback URL to POST when all documents have been created</td>
+</tr>
+<tr>
+<td>documents</td>
+<td>Array[Document]</td>
+<td>Array of documents to create</td>
+</tr>
+</tbody></table>
+
+<h3 id="documents-param">Documents Param</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td>Hash</td>
+<td>The name of the document eg. <em>document.pdf</em></td>
+</tr>
+<tr>
+<td>fields</td>
+<td>Hash</td>
+<td>Hash of key, value of each field <br><code class="prettyprint">{field_name: &#39;Field Content&#39;}</code></td>
+</tr>
+<tr>
+<td>signatories</td>
+<td>Array[Signatory]</td>
+<td>A list of <a href="#signatory">Signatory Object</a></td>
+</tr>
+<tr>
+<td>callback_url</td>
+<td>String</td>
+<td><strong>Optional</strong> A Callback URL to post when the document gets signed</td>
+</tr>
+<tr>
+<td>external_id</td>
+<td>String</td>
+<td><strong>Optional</strong> A unique id for you to identify the document in the response or fetch it</td>
+</tr>
+</tbody></table>
 
           <h1 id="embedded-signing">Embedded Signing</h1>
 
@@ -1171,6 +2255,215 @@ SHA1 HMAC, using the <strong>APP_SECRET</strong> key.</p></li>
 <li><p>If successful, the signer will be presented with a page explaining that the signing was successful and that they will receive an email with the signed document. We will also display a confirmation button (e.g. &#39;Proceed to next step&rsquo;) which will return the user to the flow of your website.</p></li>
 <li><p>Mifiel will then <code class="prettyprint">POST</code> the document information to the webhook specified by you (in Step 1): electronic signature of the document, timestamp of signature, the signature page, and information regarding the public certificate(s) used to sign the document.</p></li>
 </ol>
+
+          <h1 id="endorsables-setup">Endorsables setup</h1>
+
+<h2 id="user-account-setup">User account setup</h2>
+
+<p>Every user (issuer or receiver) of an endorsable document must set up his account. During this setup process, we will use the user&rsquo;s FIEL/e.firma to derive a set of cryptocurrency addresses where the assets (the endorsable documents) will be stored.</p>
+
+<p>The widget is an embedded tool to setup the required private keys that generate the addresses. By embedding this tool, your users can setup their account without having to leave the flow of your website.</p>
+
+<p>The flow to embed this tool into your site is:
+1. Create a Setup widget_id on our server for your user.
+2. Save the widget_id in your database so you can access it later.
+3. Use the widget_id in the setup-snippet. An iframe will be placed within your site where your user would drag his FIEL and a backup certificate.
+4. When the setup is complete, the iframe will trigger an event so you can redirect the user to the next step in your flow.</p>
+
+<h2 id="require-a-setup-widget-id">Require a setup widget id</h2>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">POST https://www.mifiel.com/api/v1/users/setup-widget</code></p>
+
+<h3 id="parameters">Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>email</td>
+<td>String</td>
+<td>Email of the user</td>
+</tr>
+<tr>
+<td>tax_id</td>
+<td>String</td>
+<td><strong>Optional</strong> Tax Id (RFC) of the user</td>
+</tr>
+<tr>
+<td>callback_url</td>
+<td>String</td>
+<td><strong>Optional</strong> URL where we will POST when the user completes the process</td>
+</tr>
+</tbody></table>
+
+<h3 id="response">Response</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>widget_id</td>
+<td>String</td>
+<td>Widget Id to be used on the snippet</td>
+</tr>
+</tbody></table>
+
+<aside class="info">
+  <b>Important:</b> Save the widget_id in your database. If the user does not complete the setup, you should use the same widget_id when the user comes back to the setup flow.
+</aside>
+
+<h2 id="user-account-setup-widget">User account setup widget</h2>
+
+<h3 id="options">Options</h3>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>widgetId</td>
+<td>String</td>
+<td></td>
+<td>Widget ID.</td>
+</tr>
+<tr>
+<td>appendTo</td>
+<td>String</td>
+<td>body</td>
+<td>ID of the element in the page</td>
+</tr>
+<tr>
+<td>successBtnText</td>
+<td>String</td>
+<td>&lsquo;OK&rsquo;</td>
+<td>Text of the button at the end of the setup flow. When the user clicks, will trigger an event so you can cach it.</td>
+</tr>
+<tr>
+<td>color</td>
+<td>String</td>
+<td>37BC9B</td>
+<td><strong>Optional</strong> Custom color in hexadecimal (e.g. 555555) to personalize the look and feel of your widget. Typically the primary color of your app.</td>
+</tr>
+<tr>
+<td>width</td>
+<td>String</td>
+<td>100%</td>
+<td><strong>Optional</strong> Width of the widget <strong>[px or %]</strong></td>
+</tr>
+<tr>
+<td>height</td>
+<td>String</td>
+<td>1100</td>
+<td><strong>Optional</strong> Height of the widget <strong>[px]</strong></td>
+</tr>
+</tbody></table>
+
+<h3 id="events">Events</h3>
+
+<blockquote>
+<p>Listen for Mifiel events:</p>
+</blockquote>
+<pre class="highlight html"><code><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;</span>
+<span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'message'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+  <span class="c1">// accept messages from known hosts only</span>
+  <span class="c1">// change to https://app-stageex.mifiel.com if necessary</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">origin</span> <span class="o">!==</span> <span class="s1">'https://app.mifiel.com'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// We will always send an object</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">e</span><span class="p">.</span><span class="nx">data</span> <span class="o">!==</span> <span class="s1">'object'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// setup completed</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">eventType</span> <span class="o">===</span> <span class="s1">'mifiel.setup-widget.success'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">,</span>
+        <span class="nx">doc</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nb">document</span>
+  <span class="p">}</span>
+  <span class="c1">// Event errors</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">eventType</span> <span class="o">===</span> <span class="s1">'mifiel.setup-widget.error'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">error</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">error</span><span class="p">;</span>
+    <span class="c1">// error.code</span>
+    <span class="c1">// error.message</span>
+  <span class="p">}</span>
+<span class="p">},</span> <span class="kc">false</span><span class="p">);</span>
+<span class="nt">&lt;/script&gt;</span>
+</code></pre>
+
+<p>We will send a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">postMessage</a> to your page to notify any of the events listed below.</p>
+
+<p>In order to secure the events sent by the widget you <strong>must</strong> verify that the event is coming from our servers. </p>
+
+<p>You can identify the events by <em>e.data.eventType</em>. The success event will have <strong>&ldquo;mifiel.setup-widget.success&rdquo;</strong> and the error events will have <strong>&ldquo;mifiel.setup-widget.error&rdquo;</strong>.</p>
+
+<h3 id="success-event">Success event</h3>
+
+<p>We will send the document json object and the signature of the user.</p>
+
+<h3 id="error-events">Error events</h3>
+
+<p>Error events have the property <em>eventType</em> set as <strong>&ldquo;mifiel.setup-widget.error&rdquo;</strong> and a error object <em>(e.data.error)</em> with <em>code</em> and <em>message</em> properties:</p>
+
+<h4 id="user-error-events">User error events</h4>
+
+<table><thead>
+<tr>
+<th>Event</th>
+<th>Code</th>
+<th>Message</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Invalid Certificate</td>
+<td>2001</td>
+<td>Certificate is not valid</td>
+</tr>
+<tr>
+<td>Invalid Private Key</td>
+<td>2002</td>
+<td>Invalid Private Key</td>
+</tr>
+<tr>
+<td>Invalid Pasword</td>
+<td>2003</td>
+<td>Invalid password</td>
+</tr>
+<tr>
+<td>Files do not match</td>
+<td>2004</td>
+<td>.key file does not belong to the .cer file</td>
+</tr>
+</tbody></table>
+
+<h4 id="server-error-events">Server error events</h4>
+
+<table><thead>
+<tr>
+<th>Event</th>
+<th>Code</th>
+<th>Message</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Setup failure</td>
+<td>3002</td>
+<td>Fail to setup user</td>
+</tr>
+</tbody></table>
 
           <h1 id="errors">Errors</h1>
 
