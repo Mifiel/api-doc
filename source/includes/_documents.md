@@ -8,19 +8,18 @@
 require 'mifiel'
 
 document = Mifiel::Document.create(
+  track: true, # for endorsable documents only
+  type: 'promissory-note', # for endorsable documents only
   file: 'path/to/my-file.pdf',
-  signatories: [
-    { 
-      name: 'Signer 1', 
-      email: 'signer1@email.com', 
-      tax_id: 'AAA010101AAA' 
-    }, 
-    { 
-      name: 'Signer 2', 
-      email: 'signer2@email.com', 
-      tax_id: 'AAA010102AAA' 
-    }
-  ],
+  signatories: [{ 
+    name: 'Signer 1', 
+    email: 'signer1@email.com', 
+    tax_id: 'AAA010101AAA' 
+  }, { 
+    name: 'Signer 2', 
+    email: 'signer2@email.com', 
+    tax_id: 'AAA010102AAA' 
+  }],
   callback_url: 'https://www.example.com/webhook/url'
 )
 
@@ -122,14 +121,21 @@ Field                 | Type |  Description
 --------------------- | ---- | -----------
 file         | String | __Optional__ File to be signed (The hash will be automatically extracted from the file and signed)
 original_hash | String | __Optional__ _SHA256 encoded_ Hash of the original, unsigned document (The hash will be signed)
-signatories  | Array | A list containing the __name__, __tax_id__ (RFC) and __email__ of each __signer__
+signatories  | Array[Signatory] | A list of [Signatory Object](#signatory)
 callback_url | String | __Optional__ A Callback URL to post when the document gets signed
+external_id  | String  | __Optional__ A unique id for you to identify the document in the response or fetch it
+track        | Boolean | __Optional__ true if you want your document to be andorsable.
+type         | String | __Optional__ (Required if param track is true) For now, the only value is 'promissory-note' (pagaré)
 
 <aside class="info">
   <ul style="margin: 0; padding: 0">
     <li>Either the <b>file</b> or <b>original_hash</b> must be passed.</li>
     <li>The <b>email</b> in the <b>signatories</b> param is <b>required</b> when using embedded signing.</li>
   </ul>
+</aside>
+
+<aside class="info">
+  If you want the generated documents to be endorsables you must pass the attribute <b>track: true</b> and the type of endorsable <b>type: 'promissory-note'</b>. Right now we only have <i>promissory-note</i> but we plan to add more in the future.
 </aside>
 
 ### Response
@@ -314,3 +320,182 @@ Field     | Type |  Description
 --------- | ---- | -----------
 email     | String | Email of the signer
 cc        | String | Email of any non-signing viewers that should receive a copy of the signed document
+
+## Transfer a document
+
+```ruby
+require 'mifiel'
+
+document = Mifiel::Document.find('29f3cb01-744d-4eae-8718-213aec8a1678')
+
+# For promissory-note the call is very simple
+document.transfer(
+  callback_url: 'https://www.example.com/webhook/url',
+  receiver: 'receiver@email.com', # simple
+  receiver: { # if you want to ensure that the receiver has a specific tax_id (RFC)
+    name: 'Receiver',
+    email: 'receiver@email.com',
+    tax_id: 'AAA010102AAA'
+  }
+)
+
+# Or for a specific endorsable document type
+document.transfer(
+  file: 'path/to/my-transfer-file.pdf', # required in certain endorsable document types
+  callback_url: 'https://www.example.com/webhook/url',
+  signatories: [{
+    name: 'Issuer',
+    email: 'issuer@email.com',
+    tax_id: 'AAA010101AAA',
+    field: 'issuer' # Could change depending on the endorsable document type
+  }, {
+    name: 'Receiver',
+    email: 'receiver@email.com',
+    tax_id: 'AAA010102AAA',
+    field: 'receiver' # Could change depending on the endorsable document type
+  }]
+)
+
+# Transfer using a template
+document.transfer(
+  ...
+  template_id: '29f3cb01-744d-4eae-8718-213aec8a1678',
+  fields: {
+    name: 'My Client Name',
+    date: '27 Sep 2017'
+  }
+  ...
+)
+```
+
+```shell
+curl -X POST https://www.mifiel.com/api/v1/documents/29f3cb01-744d-4eae-8718-213aec8a1678/transfer \
+  -F "file=@my-file.pdf" \
+  -F "signatories[0][name]=Issuer" \
+  -F "signatories[0][email]=issuer@email.com" \
+  -F "signatories[0][field]=issuer" \
+  -F "signatories[1][name]=Receiver" \
+  -F "signatories[1][email]=receiver@email.com" \
+  -F "signatories[1][field]=receiver" \
+  -F "callback_url=https://www.example.com/webhook/url" \
+  -H "Authorization: APIAuth APP-ID:hmac-signature"
+```
+
+```php
+<?php
+require 'vendor/autoload.php';
+use Mifiel\Document;
+
+$document = Document::find('29f3cb01-744d-4eae-8718-213aec8a1678');
+# For promissory-note the call is very simple
+$document->transfer([
+  'callback_url': 'https://www.example.com/webhook/url',
+  'receiver': 'receiver@email.com', # simple
+  'receiver': [ # if you want to ensure that the receiver has a specific tax_id (RFC)
+    'name': 'Receiver',
+    'email': 'receiver@email.com',
+    'tax_id': 'AAA010102AAA'
+  ]
+])
+
+# Or for a specific endorsable document type
+$document.transfer(
+  'file': 'path/to/my-transfer-file.pdf', # required in certain endorsable document types
+  'callback_url': 'https://www.example.com/webhook/url',
+  'signatories': [[
+    'name': 'Issuer',
+    'email': 'issuer@email.com',
+    'tax_id': 'AAA010101AAA',
+    'field': 'issuer' # Could change depending on the endorsable document type
+  ], [
+    'name': 'Receiver',
+    'email': 'receiver@email.com',
+    'tax_id': 'AAA010102AAA',
+    'field': 'receiver' # Could change depending on the endorsable document type
+  ]]
+)
+
+# Transfer using a template
+$document.transfer([
+  # ...
+  'template_id': '29f3cb01-744d-4eae-8718-213aec8a1678',
+  'fields': [
+    'name': 'My Client Name',
+    'date': '27 Sep 2017'
+  ]
+  # ...
+])
+?>
+```
+
+```python
+from mifiel import Document, Client
+client = Client(app_id='APP_ID', secret_key='APP_SECRET')
+
+document = Document.find(client, '29f3cb01-744d-4eae-8718-213aec8a1678')
+# For promissory-note the call is very simple
+document.transfer(
+  'callback_url': 'https://www.example.com/webhook/url',
+  'receiver': 'receiver@email.com', # simple
+  'receiver': { # if you want to ensure that the receiver has a specific tax_id (RFC)
+    'name': 'Receiver',
+    'email': 'receiver@email.com',
+    'tax_id': 'AAA010102AAA'
+  }
+)
+
+# Or for a specific endorsable document type
+document.transfer(
+  'file': 'path/to/my-transfer-file.pdf', # required in certain endorsable document types
+  'callback_url': 'https://www.example.com/webhook/url',
+  'signatories': [{
+    'name': 'Issuer',
+    'email': 'issuer@email.com',
+    'tax_id': 'AAA010101AAA',
+    'field': 'issuer' # Could change depending on the endorsable document type
+  }, {
+    'name': 'Receiver',
+    'email': 'receiver@email.com',
+    'tax_id': 'AAA010102AAA',
+    'field': 'receiver' # Could change depending on the endorsable document type
+  }]
+)
+
+# Transfer using a template
+document.transfer(
+  # ...
+  'template_id': '29f3cb01-744d-4eae-8718-213aec8a1678',
+  'fields': {
+    'name': 'My Client Name',
+    'date': '27 Sep 2017'
+  }
+  # ...
+)
+```
+
+Endorsable documents (created with `track: true` param) can be transferred to other users. To do this, the receiver must have an account in [Mifiel](www.mifiel.com) and must have set up their account to be able to receive endorsable documents.
+
+A transfer document is a page that is annexed to the original document that contains the terms of the agreement to endorse the document. It is signed by the owner (as well as the receiver in some cases) to acknowledge that the ownership of the document has been transferred. Mifiel generates a transfer document by default at the time of endorsement, but if you would like to use your own custom text and design, please contact us.
+
+In the case that the receiver account is not configured, we will return an error and send an email requiring him to do so. When the receiver configures his account we will send a notification to the callback_url provided so your system knows when to retry the call again.
+
+Use this endpoint to transfer an endorsable document.
+
+### HTTP Request
+
+`POST https://www.mifiel.com/api/v1/documents/:id/transfer`
+
+### Parameters
+
+Field        | Type     |  Description
+------------ | -------- | -----------
+callback_url | String   | __Optional__ A Callback URL to post when the document gets signed
+receiver     | String(email) OR Hash | __Optional__ Receiver info, it could be an email or a hash containing __name__, __tax_id__ (RFC) and __email__.
+file         | File     | __Optional__ The Transfer File. Depending on the endorsable document type, it could be required.
+signatories  | Array[Signatory] | __Optional__ A list of [Signatory Object](#signatory)
+template_id  | String   | __Optional__ The template id that you want to use to create the File.
+fields       | JSON [Hash]| __Optional__ A hash with the fields `{name: value}`
+
+### Response
+
+Returns a [Tracked Document Model](#tracked-document)
