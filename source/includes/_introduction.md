@@ -20,15 +20,13 @@ Once you have an account you will need an _APP_ID_ and an _APP_SECRET_ which you
 
 Just change the **www**.mifiel.com for **sandbox**.mifiel.com in every endpoint that you use.
 
-<aside class="warning">
-  Documents signed in the Sandobox environment are legally invalid and should not be used for legal purposes.
-</aside>
+<aside class="warning">The Sandbox environment is not intended to be used to sign non-test documents. Documents signed in Sandbox will not have the same legal validity as those signed in production.</aside>
 
 ### Production enviroment
 
 To start using the API in the **Production** environment you need to first create an account at [mifiel.com](https://www.mifiel.com).
 
-Once you have an account you will need an _APP_ID_ and a _APP_SECRET_ which you can generate in [mifiel.com/access_tokens](https://www.mifiel.com/access_tokens).
+Once you have an account you will need an _APP_ID_ and an _APP_SECRET_ which you can generate in [mifiel.com/access_tokens](https://www.mifiel.com/access_tokens).
 
 ## Mifiel-supported SDKs
 
