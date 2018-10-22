@@ -124,7 +124,7 @@ original_hash | String | __Optional__ _SHA256 encoded_ Hash of the original, uns
 signatories  | Array[Signatory] | A list of [Signatory Object](#signatory)
 callback_url | String | __Optional__ A Callback URL to post when the document gets signed
 external_id  | String  | __Optional__ A unique id for you to identify the document in the response or fetch it
-track        | Boolean | __Optional__ true if you want your document to be andorsable.
+track        | Boolean | __Optional__ true if you want your document to be endorsable.
 type         | String | __Optional__ (Required if param track is true) For now, the only value is 'promissory-note' (pagaré)
 
 <aside class="info">
