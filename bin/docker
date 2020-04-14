@@ -17,6 +17,9 @@ case $1 in
   stop)
     docker-compose down;;
 
+  status)
+    docker-compose ps;;
+
   logs)
     docker-compose $@;;
 
