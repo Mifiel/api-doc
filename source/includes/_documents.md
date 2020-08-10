@@ -106,7 +106,7 @@ document = Document.create(
 )
 ```
 
-Create a document to be signed by passing either a PDF file or the Hash of the file.
+Create a document to be signed by passing a PDF file.
 
 If you are using our [embedded signing widget](#widget), we suggest that you pass a __File__ so that it can be displayed to the end user (signer) within the signing flow on your webpage. Also when using the widget you must pass the __email of the signer__ (name is optional) so that we can send them a copy of the signed document when the signing process is complete.
 
@@ -119,7 +119,7 @@ If you are using our [embedded signing widget](#widget), we suggest that you pas
 
 Field                 | Type |  Description
 --------------------- | ---- | -----------
-file         | String | __Optional__ File to be signed (The hash will be automatically extracted from the file and signed)
+file         | String | File to be signed (The hash will be automatically extracted from the file and signed)
 original_hash | String | __Optional__ _SHA256 encoded_ Hash of the original, unsigned document (The hash will be signed)
 signatories  | Array[Signatory] | A list of [Signatory Object](#signatory)
 callback_url | String | __Optional__ A Callback URL to post when the document gets signed
@@ -129,7 +129,7 @@ type         | String | __Optional__ (Required if param track is true) For now, 
 
 <aside class="info">
   <ul style="margin: 0; padding: 0">
-    <li>Either the <b>file</b> or <b>original_hash</b> must be passed.</li>
+    <li>The <b>file</b> must be passed.</li>
     <li>The <b>email</b> in the <b>signatories</b> param is <b>required</b> when using embedded signing.</li>
   </ul>
 </aside>
