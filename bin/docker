@@ -1,0 +1,28 @@
+#!/bin/sh
+
+case $1 in
+  build)
+    echo "Building..."
+    docker build . -t mifiel-api-doc:latest;;
+
+  init)
+    docker-compose run --rm app bundle install;;
+
+  start)
+    docker-compose up -d;;
+
+  restart)
+    docker-compose restart;;
+
+  stop)
+    docker-compose down;;
+
+  status)
+    docker-compose ps;;
+
+  logs)
+    docker-compose $@;;
+
+  ssh)
+    docker-compose exec app bash;;
+esac
