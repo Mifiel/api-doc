@@ -121,7 +121,7 @@ Signature failure   | 3002 | Fail to sign document
 
 Following is a more detailed explanation of the steps involved in requesting and executing signatures within the embedded signing widget.
 
-1. The first step is to create a Document in your backend with the _API_ID_ and _APP_SECRET_. You must pass the __PDF file__ that is being signed (or a SHA256 encoded hash of the PDF and the name of the file), along with the following __parameters__: webhook (callback_url) and the email and name (optional) of each signer.
+1. The first step is to create a Document in your backend with the _API_ID_ and _APP_SECRET_. You must pass the __PDF file__ that is being signed, along with the following __parameters__: webhook (callback_url) and the email and name (optional) of each signer.
 
 2. Mifiel will return a __Widget ID__ in the response, which you will then need to pass to the widget (running on your website's front-end).
 
